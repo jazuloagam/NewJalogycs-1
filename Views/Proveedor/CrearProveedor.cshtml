@@ -1,0 +1,308 @@
+﻿@model Jalogycs.Models.Proveedor.Proveedor
+
+@{
+    ViewBag.Title = "CrearProveedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div id="app-proveedor">
+    <div class="container body">
+        <div class="main_container">
+            <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>CREAR PROVEEDOR</span></a></div>
+            <div class="ln_solid"></div>
+                <el-form :model="ruleForm1" :rules="rules1" ref="ruleForm1" label-width="auto" size="mini" class="ruleForm">
+                    <el-row>
+                        <div>
+                            <div>
+                                <h1 class="section_title"><i class="el-icon-user"></i><b>Detalles Generales</b></h1>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div>
+                                <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                    <el-col :span="11">
+                                        <el-form-item label="Tipo de Proveedor" prop="tipoproveedor">
+                                            <seleccion tipo="TipoProveedor"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm1.tipoproveedorseleccionado"
+                                                       placeholder="Ingrese tipo de proveedor"
+                                                       v-on:cargarseleccion="cargartipoproveedor"
+                                                       v-on:change="cambiotipoproveedor">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Transporte" prop="modotransporte">
+                                            <seleccion tipo="ModoTransporte"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm1.modotransporteseleccionado"
+                                                       placeholder="Ingrese modo de transporte"
+                                                       v-on:cargarseleccion="cargarmodotransporte"
+                                                       v-on:change="cambiomodotransporte">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Tipo de Documento" prop="tipodocumento">
+                                            <seleccion tipo="TipoDocumento"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm1.documentoseleccionado"
+                                                       placeholder="Ingrese tipo de documento"
+                                                       v-on:cargarseleccion="cargartipodocumento"
+                                                       v-on:change="cambiotipodocumento">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Numero Documento" prop="numerodocumento">
+                                            <el-input v-model="ruleForm1.numerodocumento"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Razon Social" prop="razonsocial">
+                                            <el-input v-model="ruleForm1.razonsocial"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Pais" prop="pais">
+                                            <autocomplete tipo="Pais"
+                                                          v-on:select="handleSelectPais"
+                                                          metodocargar="../api/Login/CargarDatos"
+                                                          :objeto="ruleForm1.pais"></autocomplete>
+                                        </el-form-item>
+                                        <el-form-item label="Pagina Web" prop="paginaweb">
+                                            <el-input v-model="ruleForm1.paginaweb"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                    <el-col :span="11">
+                                        <tablaedit :datos="datotablacaracteristica" :columnas="columnatablacaracteristica" :datofila="datocolumnacaracteristica">
+                                        </tablaedit>
+                                    </el-col>
+                                </el-row>
+                            </div>
+                        </div>
+                    </el-row>
+                    <el-row>
+                        <div>
+                            <div>
+                                <h1 class="section_title"><i class="el-icon-user"></i><b>Detalles de Contacto</b></h1>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <el-col :span="24">
+                                <tablaedit :datos="datotablacontacto" :columnas="columnatablacontacto" :datofila="datocolumnacontacto">
+                                </tablaedit>
+                            </el-col>
+                        </div>
+                    </el-row>
+                    <el-row>
+                        <div>
+                            <div class="ln_solid"></div>
+                            <el-col>
+                                <el-form-item>
+                                    <el-button size="small" type="success" v-on:click="crearproveedor('ruleForm1')">
+                                        Crear proveedor
+                                    </el-button>
+                                    <el-button size="small" type="success" v-on:click="cancelar()">
+                                        Cancelar
+                                    </el-button>
+                                </el-form-item>
+                            </el-col>
+                        </div>
+                    </el-row>
+                </el-form>
+        </div>
+    </div>
+    @*<div class="right_col" role="main">
+        <div class="">
+            <div class="page-header center">
+                <h3>CREAR PROVEEDOR</h3>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Proveedor</h2>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Detalles Generales</h2>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="x_content">
+                                    <form class="form-horizontal form-label-left">
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Tipo de proveedor</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <select class="form-control">
+                                                    <option>tipo</option>
+                                                    <option>tipo</option>
+                                                </select>
+                                            </div>
+                                            <button type="button" class="btn btn-success btn-xs">
+                                                <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Transporte</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <select class="form-control">
+                                                    <option>tipo</option>
+                                                    <option>tipo</option>
+                                                </select>
+                                            </div>
+                                            <button type="button" class="btn btn-success btn-xs">
+                                                <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
+                                            </button>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Razón Social</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="razonsocial" name="razonsocial" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Tipo Identificación</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <select class="form-control">
+                                                    <option>tipo</option>
+                                                    <option>tipo</option>
+                                                </select>
+                                                <button type="button" class="btn btn-success btn-xs">
+                                                    <i class="ace-icon fa fa-pencil align-top bigger-125"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Número Identificación</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="numeroidentificacion" name="numeroidentificacion"  class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Codigo IATA</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="codiata" name="codiata" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Dirección</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="direccion" name="direccion" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Teléfono</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="telefono" name="telefono" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Persona de contacto principal</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="contacto" name="contacto" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Cargo</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="cargocontacto" name="cargocontacto" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">E-mail</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <input v-model="correocontacto" name="correocontacto" class="form-control col-md-10" type="text">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3 col-sm-3 col-xs-8">Adjuntar Documentación</label>
+                                            <div class="col-md-7 col-sm-7 col-xs-7">
+                                                <div class="btn-group">
+                                                    <label class="btn-xs btn-primary btn-upload"
+                                                           for="inputImage" title="Upload image file">
+                                                        <input class="sr-only" id="inputImage" name="file"
+                                                               accept="image/*" type="file"> <span class="docs-tooltip"
+                                                                                                   data-toggle="tooltip" title="" data-original-title="Import image with Blob URLs">
+                                                            <span class="fa fa-upload"></span>
+                                                        </span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <button class="btn btn btn-success">
+                                                Crear
+                                                Proveedor
+                                            </button><button class="btn btn btn-primary">
+                                                Crear
+                                                Tarifas Proveedor
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="x_panel">
+                                    <div class="x_title">
+                                        <h2>Otros datos de contacto</h2>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="x_content">
+                                        <div class="accordion" id="accordion" role="tablist" aria-multiselectable="true">
+                                            <div class="panel">
+                                                <a class="panel-heading collapsed"
+                                                   role="tab" id="headingOne" data-toggle="collapse"
+                                                   data-parent="#accordion" href="#contacto1" aria-expanded="false"
+                                                   aria-controls="contacto1">
+                                                    <h4 class="panel-title">Contacto 2</h4>
+                                                </a>
+                                                <div id="contacto1" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne" aria-expanded="false">
+                                                    <div class="panel-body">
+                                                        <div class="panel-body">
+                                                            <form class="form-horizontal form-label-left">
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-8">Nombre</label>
+                                                                    <div class="col-md-7 col-sm-7 col-xs-7">
+                                                                        <input v-model="nombrecontactoadicional" name="nombrecontactoadicional" class="form-control col-md-10" type="text">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-8">Cargo</label>
+                                                                    <div class="col-md-7 col-sm-7 col-xs-7">
+                                                                        <input v-model="cargocontactoadicional" name="cargocontactoadicional" class="form-control col-md-10" type="text">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-8">Correo</label>
+                                                                    <div class="col-md-7 col-sm-7 col-xs-7">
+                                                                        <input v-model="correocontactoadicional" name="correocontactoadicional" class="form-control col-md-10" type="text">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-8">Telefono</label>
+                                                                    <div class="col-md-7 col-sm-7 col-xs-7">
+                                                                        <input v-model="telefonocontactoadicional" name="telefonocontactoadicional" class="form-control col-md-10" type="text">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-8">Pais</label>
+                                                                    <div class="col-md-7 col-sm-7 col-xs-7">
+                                                                        <input v-model="paiscontactoadicional" name="paiscontactoadicional" class="form-control col-md-10" type="text">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group">
+                                                                    <label class="control-label col-md-3 col-sm-3 col-xs-8">Ciudad</label>
+                                                                    <div class="col-md-7 col-sm-7 col-xs-7">
+                                                                        <input v-model="ciudadcontactoadicional" name="ciudadcontactoadicional" class="form-control col-md-10" type="text">
+                                                                    </div>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>*@
+</div>
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/Proveedor.js")"></script>
+}

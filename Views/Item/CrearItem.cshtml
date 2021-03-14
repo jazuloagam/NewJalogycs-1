@@ -1,0 +1,252 @@
+﻿
+@{
+    ViewBag.Title = "CrearItem";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app-crearitem">
+    <div class="container body">
+        <div class="main_container">
+            <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>CREAR ITEM</span></a></div>
+            <div class="ln_solid"></div>
+            <div>
+                <el-button type="text" v-on:click="dialogFormVisible = true">open a Form nested Dialog</el-button>
+
+                <el-dialog title="Shipping address" :visible.sync="dialogFormVisible">
+                    <el-form :model="ruleFormDisposicionCarga" :rules="rulesDisposicionCarga" ref="ruleFormDisposicionCarga" label-width="auto" class="ruleForm">
+                        <el-row>
+                            <el-form-item label="Nombre" prop="nombre">
+                                <el-input v-model="ruleFormDisposicionCarga.nombre"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Codigo" prop="codigo">
+                                <el-input v-model="ruleFormDisposicionCarga.codigo"></el-input>
+                            </el-form-item>
+                        </el-row>
+                        @*<el-row>
+                            <el-button size="small" type="success" v-on:click="creardisposicioncarga('ruleFormDisposicionCarga')">
+                                Confirmar
+                            </el-button>
+                        </el-row>*@
+                    </el-form>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button v-on:click="dialogFormVisible = false">Cancel</el-button>
+                        <el-button type="primary" v-on:click="dialogFormVisible = false">Confirm</el-button>
+                    </span>
+                </el-dialog>
+                <el-col :span="12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Tipo De Mercancía</h2>
+                            <div class="clearfix"></div>
+                            <div class="x_content">
+                                <el-form :model="ruleFormMercancia" :rules="rulesMercancia" ref="ruleFormMercancia" label-width="auto" class="ruleForm">
+                                    <el-row>
+                                        <el-form-item class="label_black" label="Tramite" prop="tramite">
+                                            <el-select v-on:change="cambiotramite" value-key="ruleFormMercancia.tramiteseleccionado" style="width:100%" v-model="ruleFormMercancia.tramiteseleccionado" placeholder="Ingrese tramite">
+                                                <el-option v-for="opcion in ruleFormMercancia.tramite"
+                                                           :key="opcion.id_dominio"
+                                                           :label="opcion.nombre"
+                                                           :value="opcion.id_dominio">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item v-show="isotro" label="Cual?" prop="otro">
+                                            <el-input v-model="ruleFormMercancia.otro"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Nombre" prop="nombre">
+                                            <el-input v-model="ruleFormMercancia.nombre"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo" prop="codigo">
+                                            <el-input v-model="ruleFormMercancia.codigo"></el-input>
+                                        </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-button size="small" type="success" v-on:click="creartipomercancia('ruleFormMercancia')">
+                                            Confirmar
+                                        </el-button>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Disposición De La Carga</h2>
+                            <div class="clearfix"></div>
+                            <div class="x_content">
+                                <el-form :model="ruleFormDisposicionCarga" :rules="rulesDisposicionCarga" ref="ruleFormDisposicionCarga" label-width="auto" class="ruleForm">
+                                    <el-row>
+                                        <el-form-item label="Nombre" prop="nombre">
+                                            <el-input v-model="ruleFormDisposicionCarga.nombre"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo" prop="codigo">
+                                            <el-input v-model="ruleFormDisposicionCarga.codigo"></el-input>
+                                        </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-button size="small" type="success" v-on:click="creardisposicioncarga('ruleFormDisposicionCarga')">
+                                            Confirmar
+                                        </el-button>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Tipo De Operación</h2>
+                            <div class="clearfix"></div>
+                            <div class="x_content">
+                                <el-form :model="ruleFormTipoOperacion" :rules="rulesTipoOperacion" ref="ruleFormTipoOperacion" label-width="auto" class="ruleForm">
+                                    <el-row>
+                                        <el-form-item class="label_black" label="Clase" prop="clasetipooperacion">
+                                            <el-select v-on:change="cambioclasetipooperacion" value-key="ruleFormTipoOperacion.clasetipooperacion" style="width:100%" v-model="ruleFormTipoOperacion.clasetipooperacionseleccionado" placeholder="Ingrese tramite">
+                                                <el-option v-for="opcion in ruleFormTipoOperacion.clasetipooperacion"
+                                                           :key="opcion.id_dominio"
+                                                           :label="opcion.nombre"
+                                                           :value="opcion.id_dominio">
+                                                </el-option>
+                                            </el-select>
+                                        </el-form-item>
+                                        <el-form-item label="Nombre" prop="nombre">
+                                            <el-input v-model="ruleFormTipoOperacion.nombre"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo" prop="codigo">
+                                            <el-input v-model="ruleFormTipoOperacion.codigo"></el-input>
+                                        </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-button size="small" type="success" v-on:click="creartipooperacion('ruleFormTipoOperacion')">
+                                            Confirmar
+                                        </el-button>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
+                <el-col :span="12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Tipo De Embalaje</h2>
+                            <div class="clearfix"></div>
+                            <div class="x_content">
+                                <el-form :model="ruleFormTipoEmbalaje" :rules="rulesTipoEmbalaje" ref="ruleFormTipoEmbalaje" label-width="auto" class="ruleForm">
+                                    <el-row>
+                                        <el-form-item label="Nombre" prop="nombre">
+                                            <el-input v-model="ruleFormTipoEmbalaje.nombre"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo" prop="codigo">
+                                            <el-input v-model="ruleFormTipoEmbalaje.codigo"></el-input>
+                                        </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-button size="small" type="success" v-on:click="creartipoembalaje('ruleFormTipoEmbalaje')">
+                                            Confirmar
+                                        </el-button>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Tipo De Contenedor</h2>
+                            <div class="clearfix"></div>
+                            <div class="x_content">
+                                <el-form :model="ruleFormTipoContenedor" :rules="rulesTipoContenedor" ref="ruleFormTipoContenedor" label-width="auto" class="ruleForm">
+                                    <el-row>
+                                        <el-form-item label="Tipo de equipo" prop="tipoequipo">
+                                            <el-input v-model="ruleFormTipoContenedor.tipoequipo"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo tipo de equipo" prop="codigotipoequipo">
+                                            <el-input v-model="ruleFormTipoContenedor.codigotipoequipo"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Tamaño equipo" prop="tamanioequipo">
+                                            <el-input v-model="ruleFormTipoContenedor.tamanioequipo"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo tamaño equipo" prop="codigotamanioequipo">
+                                            <el-input v-model="ruleFormTipoContenedor.codigotamanioequipo"></el-input>
+                                        </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-button size="small" type="success" v-on:click="creartipocontenedor('ruleFormTipoContenedor')">
+                                            Confirmar
+                                        </el-button>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>Crear Tipo De Vehiculo</h2>
+                            <div class="clearfix"></div>
+                            <div class="x_content">
+                                <el-form :model="ruleFormTipoVehiculo" :rules="rulesTipoVehiculo" ref="ruleFormTipoVehiculo" label-width="auto" class="ruleForm">
+                                    <el-row>
+                                        <el-form-item label="Nombre" prop="nombre">
+                                            <el-input v-model="ruleFormTipoVehiculo.nombre"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Codigo" prop="codigo">
+                                            <el-input v-model="ruleFormTipoVehiculo.codigo"></el-input>
+                                        </el-form-item>
+                                    </el-row>
+                                    <el-row>
+                                        <el-button size="small" type="success" v-on:click="creartipovehiculo('ruleFormTipoVehiculo')">
+                                            Confirmar
+                                        </el-button>
+                                    </el-row>
+                                </el-form>
+                            </div>
+                        </div>
+                    </div>
+                </el-col>
+            </div>            
+            <div>
+                    <el-col :span="24">
+                            <div class="x_panel">
+                                <div class="x_title">
+                                    <h2>Crear Tipo De Documento</h2>
+                                    <div class="clearfix"></div>
+                                    <div class="x_content">
+                                        <el-form :model="ruleFormTipoDocumento" :rules="rulesTipoDocumento" ref="ruleFormTipoDocumento" label-width="auto" class="ruleForm">
+                                            <el-row>
+                                                <el-form-item label="Tipo de permiso" prop="tipopermiso">
+                                                    <el-input v-model="ruleFormTipoDocumento.tipopermiso"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="Codigo Tipo de permiso" prop="codigotipopermiso">
+                                                    <el-input v-model="ruleFormTipoDocumento.codigotipopermiso"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="Entidad que otorga permiso" prop="entidadpermiso">
+                                                    <el-input v-model="ruleFormTipoDocumento.entidadpermiso"></el-input>
+                                                </el-form-item>
+                                                <el-form-item label="Codigo Entidad que otorga permiso" prop="codigoentidadpermiso">
+                                                    <el-input v-model="ruleFormTipoDocumento.codigoentidadpermiso"></el-input>
+                                                </el-form-item>
+                                                <el-form-item>
+                                                    <el-checkbox v-model="ruleFormTipoDocumento.checked" v-on:change="checktipodocumento">Asociar comentario predeterminado al documento</el-checkbox>
+                                                </el-form-item>
+                                                <el-form-item v-show="ruleFormTipoDocumento.comentariovisible">
+                                                    <el-input type="textarea" v-model="ruleFormTipoDocumento.comentario"></el-input>
+                                                </el-form-item>
+                                            </el-row>
+                                            <el-row>
+                                                <el-button size="small" type="success" v-on:click="creartipodocumento('ruleFormTipoVehiculo')">
+                                                    Confirmar
+                                                </el-button>
+                                            </el-row>
+                                        </el-form>
+                                    </div>
+                                </div>
+                            </div>
+                    </el-col>
+            </div>                       
+        </div>
+    </div>
+</div>
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/CrearItem.js")"></script>
+}
+

@@ -1,0 +1,27 @@
+﻿@model Jalogycs.Models.InicioSesion.InicioSesionModel
+
+@{
+    ViewBag.Title = "Iniciar Sesión";
+    Layout = "~/Views/Shared/_LayoutSinSesion.cshtml";
+}
+ 
+    <div id="app">
+        <section class="login">
+            <section class="login__container">
+                <img src="~/images/jalemco.png" alt="logojalemco" />
+                <h1>Inicia sesión</h1>
+                <form class="login__container--form">
+                    <input type="text" v-model="username" class="input" placeholder="Usuario" required="" autocomplete="off">
+                    <input type="password" v-model="password" class="input" placeholder="Contraseña" required="" autocomplete="off">
+                    <button class="button" v-on:click="iniciarsesion">Iniciar sesión</button>
+                    <div class="login__container--remember-me">
+                        <a href="/../Home/OlvideUsuario">Olvidé mi contraseña</a>
+                    </div>
+                </form>
+                <p class="login__container--register">No tienes ninguna cuenta <a href="/../Home/Registro">Regístrate</a></p>
+            </section>
+        </section>
+    </div>
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/SinSesion.js")"></script>
+}

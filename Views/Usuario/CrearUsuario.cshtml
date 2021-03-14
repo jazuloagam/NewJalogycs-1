@@ -1,0 +1,96 @@
+﻿
+@{
+    ViewBag.Title = "CrearUsuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app-generarusuario">
+    <div class="container body">
+        <div class="main_container">
+            <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>CREAR USUARIO</span></a></div>
+            <div class="ln_solid"></div>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" class="ruleForm">
+                <el-row :gutter="24" type="flex" class="row-bg" justify="center">
+                    <el-col :span="12">
+                        <el-row class="row-bg">
+                            <el-col>
+                                <h4 class="section_title label_black"><i class="el-icon-user"></i><b>DATOS GENERALES</b></h4>
+                            </el-col>
+                        </el-row>
+                        <el-row>
+                            <el-form-item class="label_black" label="Tipo de Usuario" prop="tipousuario">
+                                <seleccion tipo="TipoUsuario"
+                                           metodocargar="../api/Login/CargarDatos"
+                                           :opcionseleccionada="ruleForm.usuarioseleccionado"
+                                           placeholder="Ingrese tipo de usuario"
+                                           v-on:cargarseleccion="cargartipousuario"
+                                           v-on:change="cambiotipousuario">
+                                </seleccion>
+                            </el-form-item>
+                            <el-form-item label="Nombres" prop="nombres">
+                                <el-input v-model="ruleForm.nombres"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Apellidos" prop="apellidos">
+                                <el-input v-model="ruleForm.apellidos"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Cargo" prop="cargo">
+                                <el-input v-model="ruleForm.cargo"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Correo Electronico" prop="correo">
+                                <el-input v-model="ruleForm.correo"></el-input>
+                            </el-form-item>
+                            <el-form-item label="Usuario" prop="usuario">
+                                <el-input v-model="ruleForm.usuario"></el-input>
+                            </el-form-item>
+                            <el-form-item label="País" prop="pais">
+                                <autocomplete tipo="PaisCuenta"
+                                              v-on:cargarlista="cargarpaises"
+                                              v-on:select="handleSelect"
+                                              metodocargar="../api/Login/CargarDatos"
+                                              :objeto="ruleForm.pais"></autocomplete>
+                            </el-form-item>
+                        </el-row>
+                    </el-col>
+                    <el-col :span="11">
+                        <el-row class="row-bg">
+                            <el-col>
+                                <h4 class="section_title label_black"><i class="el-icon-user"></i><b>ACTIVAR MODULOS Y PERMISOS DE USUARIO</b></h4>
+                            </el-col>
+                        </el-row>
+                        <el-row class="row-bg">
+                            <el-tabs type="border-card">
+                                <el-tab-pane label="Opciones">
+                                    <el-tree :data="obtenerarbol()"
+                                             show-checkbox
+                                             node-key="id"
+                                             ref="tree"
+                                             :default-checked-keys="opcionesseleccionadas"
+                                             :props="defaultProps">
+                                    </el-tree>
+                                </el-tab-pane>
+                            </el-tabs>
+                        </el-row>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <div class="ln_solid"></div>
+                    <el-col :span="12" :offset="6">
+
+                        <el-row>
+                            <el-form-item>
+                                <div class="loader" v-show="loading">Loading...</div>
+                                <el-button size="small" type="success" v-on:click="crearusuario('ruleForm')">
+                                    Crear Usuario
+                                </el-button>
+                            </el-form-item>
+                        </el-row>
+                    </el-col>
+                </el-row>
+            </el-form>
+        </div>
+    </div>
+</div>
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/GenerarUsuario.js")"></script>
+}

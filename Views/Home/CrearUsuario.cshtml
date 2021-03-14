@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "CrearUsuario";
+    Layout = "~/Views/Shared/_LayoutSinSesion.cshtml";
+}
+
+    <div id="app-crearusuario">
+        <header class="header__pantallaprincipal">
+            <div>
+                <a href=""><i class="fa fa-user"></i><span>CREAR USUARIO</span></a>
+            </div>
+        </header>
+        <section class="section__table">
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" class="ruleForm section__center">
+                <section class="w50">
+                    <el-form-item class="label_white" label="Tipo de Documento" prop="tipodocumento">
+                        <seleccion tipo="TipoDocumento"
+                                   metodocargar="../api/Login/CargarDatos"
+                                   :opcionseleccionada="ruleForm.documentoseleccionado"
+                                   placeholder="Ingrese tipo de documento"
+                                   v-on:cargarseleccion="cargardatos"
+                                   v-on:change="cambiotipodocumento">
+                        </seleccion>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Numero de Documento" prop="numerodocumento">
+                        <el-input v-model="ruleForm.numerodocumento"></el-input>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Razon Social" prop="razonsocial">
+                        <el-input v-model="ruleForm.razonsocial" disabled></el-input>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Nombres" prop="nombres">
+                        <el-input v-model="ruleForm.nombres"></el-input>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Apellidos" prop="apellidos">
+                        <el-input v-model="ruleForm.apellidos"></el-input>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Usuario" prop="usuario">
+                        <el-input v-model="ruleForm.usuario"></el-input>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Contraseña" prop="password">
+                        <el-input type="password" v-model="ruleForm.password"></el-input>
+                    </el-form-item>
+                    <el-form-item class="label_white" label="Confirmar contraseña" prop="confirmpassword">
+                        <el-input v-model="ruleForm.confirmpassword"></el-input>
+                    </el-form-item>
+                </section>
+            </el-form>
+        </section>
+        <section class="section__boton">
+            <div>
+                <el-button size="small" type="success" v-on:click="activarusuario('ruleForm')">
+                    Crear Usuario
+                </el-button>
+            </div>
+        </section>
+
+
+        @*<div class="container body">
+            <div class="main_container">
+                <div class="col-md-12">
+                    <div class="col-middle">
+                        <div style="text-align:center"><a href="" class="site_title"><i class="fa fa-user"></i><span>CREAR USUARIO</span></a></div>
+                        <div class="ln_solid"></div>
+                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" class="ruleForm">
+                            <el-col :span="12" :offset="6">
+                                <el-row>
+                                    <el-form-item class="label_white" label="Tipo de Documento" prop="tipodocumento">
+                                        <seleccion tipo="TipoDocumento"
+                                                   metodocargar="../api/Login/CargarDatos"
+                                                   :opcionseleccionada="ruleForm.documentoseleccionado"
+                                                   placeholder="Ingrese tipo de documento"
+                                                   v-on:cargarseleccion="cargardatos"
+                                                   v-on:change="cambiotipodocumento">
+                                        </seleccion>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Numero de Documento" prop="numerodocumento">
+                                        <el-input v-model="ruleForm.numerodocumento"></el-input>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Razon Social" prop="razonsocial">
+                                        <el-input v-model="ruleForm.razonsocial" disabled></el-input>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Nombres" prop="nombres">
+                                        <el-input v-model="ruleForm.nombres"></el-input>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Apellidos" prop="apellidos">
+                                        <el-input v-model="ruleForm.apellidos"></el-input>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Usuario" prop="usuario">
+                                        <el-input v-model="ruleForm.usuario"></el-input>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Contraseña" prop="password">
+                                        <el-input type="password" v-model="ruleForm.password"></el-input>
+                                    </el-form-item>
+                                    <el-form-item class="label_white" label="Confirmar contraseña" prop="confirmpassword">
+                                        <el-input v-model="ruleForm.confirmpassword"></el-input>
+                                    </el-form-item>
+                                </el-row>
+                            </el-col>
+                            <el-col :span="12" :offset="6">
+                                <div class="ln_solid"></div>
+                                <el-row>
+                                    <el-form-item>
+                                        <el-button size="small" type="success" v-on:click="activarusuario('ruleForm')">
+                                            Crear Usuario
+                                        </el-button>
+                                    </el-form-item>
+                                </el-row>
+                            </el-col>
+                        </el-form>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    </div>
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/CrearUsuario.js")"></script>
+}
+

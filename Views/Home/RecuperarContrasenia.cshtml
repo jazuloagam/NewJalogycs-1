@@ -1,0 +1,168 @@
+﻿@model Jalogycs.Models.InicioSesion.RecuperarContraseña
+
+@{
+    ViewBag.Title = "View";
+    Layout = "~/Views/Shared/_LayoutSinSesion.cshtml";
+}
+
+    <div id="app-recuperar">
+
+        <header class="header__pantallaprincipal">
+            <div>
+                <a href=""><i class="fa fa-user"></i><span>Generar Contraseña</span></a>
+            </div>
+        </header>
+        <section class="section__table">
+            <section class="w50">
+                <p>{{subtitulo}}</p>
+                <div class="table-responsive" v-show="!mostrartabla">
+                    <table class="table table-striped jambo_table bulk_action">
+                        <thead>
+                            <tr class="headings">
+                                <th class="column-title">
+
+                                </th>
+                                <th class="column-title">Usuario</th>
+                                <th class="column-title">Persona</th>
+                                <th class="bulk-actions">
+
+                                </th>
+                                <th class="bulk-actions">
+                                    Usuario
+                                <th class="bulk-actions">
+                                    Persona
+                                </th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+                            <tr v-for="(opcion, indice) in usuarios" :key="indice" v-bind:class="[indice == activo ? 'even pointer selected' : 'even pointer']">
+                                <td class="a-center">
+                                    <input type="radio" v-bind:class="[indice == activo ? 'icheckbox_flat-green checked' : 'icheckbox_flat-green']" name="table_records" v-on:click="usuario(opcion,indice)" />
+                                </td>
+                                <td class=" ">{{opcion.NombreUsuario}}</td>
+                                <td class=" ">{{opcion.Persona.Nombre}}  {{opcion.Persona.Apellido}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="login_wrapper" v-show="mostrartabla">
+
+                    <section class="login_content">
+                        <form>
+                            <div class="col-md-12 col-xs-12">
+                                <div>
+                                    <input type="text" disabled="disabled" v-model="username" class="form-control" placeholder="Usuario" required="" autocomplete="off" />
+                                </div>
+                                <div>
+                                    <input type="password" v-model="password" class="form-control" placeholder="Contraseña" required="" autocomplete="off" />
+                                </div>
+                                <div>
+                                    <input type="password" v-model="passwordconfirm" class="form-control" placeholder="Confirmar Contraseña" required="" autocomplete="off" />
+                                </div>
+                            </div>
+                            <div class="col-md-12 col-xs-12">
+                                <div>
+                                    <input type="submit" class="btn btn-default submit" value="Atras" v-on:click="atras" />
+                                    <input type="submit" class="btn btn-default submit" value="Generar contraseña" v-on:click="generarcontrasenia" />
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+
+                </div>
+            </section>
+            
+        </section>
+
+
+        @*<div class="contenedorlogin body">
+            <div class="right_col" role="main">
+                <div class="">
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
+                            <div class="x_panel">
+                                <div class="x_content">
+                                    <div class="page-header center"><h1>Generar contraseña</h1></div>
+                                    <p>{{subtitulo}}</p>
+                                    <div class="table-responsive" v-show="mostrartabla">
+                                        <table class="table table-striped jambo_table bulk_action">
+                                            <thead>
+                                                <tr class="headings">
+                                                    <th class="column-title">
+
+                                                    </th>
+                                                    <th class="column-title">Usuario</th>
+                                                    <th class="column-title">Persona</th>
+                                                    <th class="bulk-actions">
+
+                                                    </th>
+                                                    <th class="bulk-actions">
+                                                        Usuario
+                                                    <th class="bulk-actions">
+                                                        Persona
+                                                    </th>
+                                                </tr>
+
+                                            </thead>
+
+                                            <tbody>
+                                                <tr v-for="(opcion, indice) in usuarios" :key="indice" v-bind:class="[indice == activo ? 'even pointer selected' : 'even pointer']">
+                                                    <td class="a-center">
+                                                        <input type="radio" v-bind:class="[indice == activo ? 'icheckbox_flat-green checked' : 'icheckbox_flat-green']" name="table_records" v-on:click="usuario(opcion,indice)" />
+                                                    </td>
+                                                    <td class=" ">{{opcion.NombreUsuario}}</td>
+                                                    <td class=" ">{{opcion.Persona.Nombre}}  {{opcion.Persona.Apellido}}</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="login_wrapper" v-show="!mostrartabla">
+
+                                            <section class="login_content">
+                                                <form>
+                                                    <div class="col-md-12 col-xs-12">
+                                                        <div>
+                                                            <input type="text" disabled="disabled" v-model="username" class="form-control" placeholder="Usuario" required="" autocomplete="off" />
+                                                        </div>
+                                                        <div>
+                                                            <input type="password" v-model="password" class="form-control" placeholder="Contraseña" required="" autocomplete="off" />
+                                                        </div>
+                                                        <div>
+                                                            <input type="password" v-model="passwordconfirm" class="form-control" placeholder="Confirmar Contraseña" required="" autocomplete="off" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 col-xs-12">
+                                                        <div>
+                                                            <input type="submit" class="btn btn-default submit" value="Atras" v-on:click="atras" />
+                                                            <input type="submit" class="btn btn-default submit" value="Generar contraseña" v-on:click="generarcontrasenia" />
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </section>
+
+                                    </div>
+                                    
+                                    
+                                    
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+
+
+
+
+    </div>
+
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/RecuperarContrasenia.js")"></script>
+}

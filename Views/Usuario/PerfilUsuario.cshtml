@@ -1,0 +1,60 @@
+﻿
+@{
+    ViewBag.Title = "PerfilUsuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app-perfilusuario">
+    <div class="container body">
+        <div class="main_container">
+            <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>PERFIL USUARIO</span></a></div>
+            <div class="ln_solid"></div>
+            <el-row>
+                <el-col :span="6">
+                    <div class="demo-image">
+                        <el-image @*style="width: 100px; height: 100px"*@
+                                  :src="Persona.FotoUrl"
+                                  @*:preview-src-list="srcList"*@>
+                        </el-image>
+                        <label class="h4">{{ruleForm.nombres}} {{ruleForm.apellidos}}</label>
+                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" size="mini" class="ruleForm">
+                            <el-row>
+                                <el-col>
+                                    <el-form-item label="Cargo" prop="cargo">
+                                        <el-input v-model="ruleForm.cargo"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="Telefono" prop="telefono">
+                                        <el-input v-model="ruleForm.telefono"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="Ingreso" prop="fechaingreso">
+                                        <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.fechaingreso" style="width: 100%;"></el-date-picker>
+                                    </el-form-item>
+                                    <el-form-item label="Nacimiento" prop="fechanacimiento">
+                                        <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.fechanacimiento" style="width: 100%;"></el-date-picker>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                            <el-row>
+                                <el-col>
+                                    <el-form-item>
+                                        <el-button size="small" type="success" v-on:click="editarperfil('ruleForm')">
+                                            Editar Perfil
+                                        </el-button>
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        </el-form>
+                    </div>
+                </el-col>
+                <el-col :span="18">
+
+                </el-col>
+            </el-row>
+        </div>
+    </div>
+</div>
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/PerfilUsuario.js")"></script>
+}
+

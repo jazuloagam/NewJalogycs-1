@@ -1,0 +1,702 @@
+﻿@*@{
+        ViewBag.Title = "CrearDO";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
+
+    <div id="app-creardo">
+        <div class="container body">
+            <div class="main_container">
+                <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>CREAR DO</span></a></div>
+                <div class="ln_solid"></div>
+                <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" size="mini" class="ruleForm">
+                    <el-row>
+                        <div>
+                            <div>
+                                <h1 class="section_title"><i class="el-icon-user"></i><b>Detalles Generales</b></h1>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div>
+                                <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                    <el-col :span="11">
+                                        <el-form-item label="Número" prop="numero">
+                                            <el-input v-model="ruleForm.numero"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="Cliente" prop="cliente">
+                                            <autocomplete tipo="Cliente"
+                                                          v-on:select="handleSelectCliente"
+                                                          v-on:cargarlista="cargarClientes"
+                                                          metodocargar="../api/Login/CargarDatos"
+                                                          :objeto="ruleForm.cliente"></autocomplete>
+                                            <button type="button" class="btn btn-success btn-xs" v-on:click="abrirseleccioncliente"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                        </el-form-item>
+                                        <el-form-item label="Tipo de operación" prop="tipooperacion">
+                                            <seleccion tipo="TipoOperacion"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm.tipooperacionseleccionado"
+                                                       placeholder="Ingrese tipo de operación"
+                                                       v-on:cargarseleccion="cargartipooperacion"
+                                                       v-on:change="cambiotipooperacion">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Modo de transporte" prop="modotransporte">
+                                            <seleccion tipo="ModoTransporte"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm.modotransporteseleccionado"
+                                                       placeholder="Ingrese modo de transporte"
+                                                       v-on:cargarseleccion="cargarmodotransporte"
+                                                       v-on:change="cambiomodotransporte">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item v-show="visibilidadfactorestiba" label="Factor de estiba" prop="factorestiba">
+                                            <seleccion tipo="FactorEstiba"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm.factorestibaseleccionado"
+                                                       placeholder="Ingrese Factor de estiba"
+                                                       v-on:cargarseleccion="cargarfactorestiba"
+                                                       v-on:change="cambiofactorestiba">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Tipo de Carga" prop="tipocarga">
+                                            <seleccion tipo="TipoCarga"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm.tipocargaseleccionado"
+                                                       placeholder="Ingrese Tipo de carga"
+                                                       v-on:cargarseleccion="cargartipocarga"
+                                                       v-on:change="cambiotipocarga">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Origen" prop="origen">
+                                            <autocomplete tipo="Puerto"
+                                                          v-on:select="handleSelectOrigen"
+                                                          metodocargar="../api/Login/CargarDatos"
+                                                          :objeto="ruleForm.origen"></autocomplete>
+                                            <button type="button" class="btn btn-success btn-xs" v-on:click="abrirseleccionpuerto('origen')"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                        </el-form-item>
+                                        <el-form-item label="Destino" prop="destino">
+                                            <autocomplete tipo="Puerto"
+                                                          v-on:select="handleSelectDestino"
+                                                          v-on:cargarlista="cargarPuertos"
+                                                          metodocargar="../api/Login/CargarDatos"
+                                                          :objeto="ruleForm.destino"></autocomplete>
+                                            <button type="button" class="btn btn-success btn-xs" v-on:click="abrirseleccionpuerto('destino')"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                        </el-form-item>
+                                        <el-form-item label="Incoterm" prop="incoterm">
+                                            <seleccion tipo="Incoterm"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm.incotermseleccionado"
+                                                       :datoseleccion="ruleForm.incoterm"
+                                                       placeholder="Ingrese Incoterm"
+                                                       v-on:cargarseleccion="cargarincoterm"
+                                                       v-on:change="cambioincoterm">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item label="Entrega" prop="lugarentregaincoterm">
+                                            <el-input v-model="ruleForm.lugarentregaincoterm" placeholder="Lugar Entrega Incoterm"></el-input>
+                                        </el-form-item>
+                                    </el-col>
+                                </el-row>
+                            </div>
+                        </div>
+                    </el-row>
+                    <el-row>
+                        <div>
+                            <div class="ln_solid"></div>
+                            <el-col>
+                                <el-form-item>
+                                    <el-button size="small" type="success" v-on:click="creardo('ruleForm')">
+                                        Crear DO
+                                    </el-button>
+                                    <el-button size="small" type="success" v-on:click="cancelar()">
+                                        Cancelar
+                                    </el-button>
+                                </el-form-item>
+                            </el-col>
+                        </div>
+                    </el-row>
+                </el-form>
+                <el-dialog title="Selección cliente" :visible.sync="dialogFormClienteVisible">
+                    <tablaseleccion :columnas="columnatablacliente" :datos="datostablacliente" referencia="singleTable" v-on:changecurrent="changecurrentcliente"></tablaseleccion>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button v-on:click="cancelarseleccioncliente">Cancelar</el-button>
+                        <el-button type="primary" v-on:click="confirmarseleccioncliente">Seleccionar</el-button>
+                    </span>
+                </el-dialog>
+                <el-dialog title="Selección origen" :visible.sync="dialogFormOrigenVisible">
+                    <tablaseleccion :columnas="columnatablapuerto" :datos="datostablaorigen" referencia="singleTable" v-on:changecurrent="changecurrentorigen"></tablaseleccion>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button v-on:click="cancelarseleccionorigen">Cancelar</el-button>
+                        <el-button type="primary" v-on:click="confirmarseleccionorigen">Seleccionar</el-button>
+                    </span>
+                </el-dialog>
+                <el-dialog title="Selección destino" :visible.sync="dialogFormDestinoVisible">
+                    <tablaseleccion :columnas="columnatablapuerto" :datos="datostabladestino" referencia="singleTable" v-on:changecurrent="changecurrentdestino"></tablaseleccion>
+                    <span slot="footer" class="dialog-footer">
+                        <el-button v-on:click="cancelarselecciondestino">Cancelar</el-button>
+                        <el-button type="primary" v-on:click="confirmarselecciondestino">Seleccionar</el-button>
+                    </span>
+                </el-dialog>
+            </div>
+        </div>
+    </div>
+
+    @section  scripts{
+        <script src="@Url.Content("~/public/dist/js/CrearDo.js")"></script>
+    }*@
+
+
+@{
+    ViewBag.Title = "CrearWarehouse";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app-crearwarehouse">
+    <div class="container body">
+        <div class="main_container">
+            <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>CrearWarehouse</span></a></div>
+            <div class="ln_solid"></div>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" size="mini" class="ruleForm">
+                <div v-if="ocultarprincipal">
+                    {{ruleForm}}
+                    <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                        <el-col :span="11">
+                            <el-form-item label="Cliente" prop="cliente">
+                                <autocomplete tipo="ClienteProveedor"
+                                              v-on:select="handleSelectCliente"
+                                              metodocargar="../api/Login/CargarDatos"
+                                              v-on:cargarlista="cargarCliente"
+                                              :objeto="ruleForm.cliente"
+                                              v-on:change="handleChangeAutoCompleteCliente"></autocomplete>
+                                <button type="button" class="btn btn-info btn-xs" v-on:click="adicionarcliente"><i class="el-icon-plus"></i></button>
+                                <button type="button" class="btn btn-success btn-xs" v-on:click="buscarcliente"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                            </el-form-item>
+                            <el-form-item label="DO" prop="DO">
+                                <autocomplete tipo="DO"
+                                              v-on:select="handleSelectDO"
+                                              metodocargar="../api/Login/CargarDatos"
+                                              :objeto="ruleForm.DO"></autocomplete>
+                            </el-form-item>
+
+                        </el-col>
+                    </el-row>
+                </div>
+
+                <div v-if="visualizacionprincipal">
+                    <div v-if="ocultarprincipal">
+                        <div v-if="nuevodato">
+                            <div class="ln_solid"></div>
+                            <div>
+                                <h5>
+                                    A Continuación se presenta un listado de los DO o status del cliente seleccionado, que hasta el momento no cuentan con reserva, ni documento de transporte asociado.
+                                    De acuerdo al numero de DO puede crear el warehouse correspondiente:
+                                </h5>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <el-col :span="24">
+                                <tablaseleccion :columnas="columnatablaseleccionwarehouse" :datos="datotablaseleccionwarehouse" :key="componentKey" v-on:accionclick="consultawarehouse" referencia="singleTable" v-on:changecurrent="changecurrentwarehouse" v-on:changeselection="changeseleccionwarehouse"></tablaseleccion>
+                            </el-col>
+                            <br />
+                            <div class="ln_solid"></div>
+                            <el-col>
+                                <el-form-item v-if="visualizarwarehouse">
+                                    <el-button size="small" type="success" v-on:click="crearnuevowarehouse()">
+                                        Crear Nuevo Warehouse
+                                    </el-button>
+                                </el-form-item>
+                            </el-col>
+                            <br />
+                            <div class="ln_solid"></div>
+                        </div>
+                        <div class="ln_solid"></div>
+                        <div>
+                            <h5>
+                                Si el warehouse a crear no tiene asignado un número de DO, proceder a crear el DO para habilitar el boton de creación de warehouse.
+                            </h5>
+                        </div>
+                        <br />
+                        <div style="text-align:center">
+                            <el-col>
+                                <el-form-item>
+                                    <el-button size="small" type="success" v-on:click="creardo()">
+                                        Crear DO
+                                    </el-button>
+                                </el-form-item>
+                            </el-col>
+                        </div>
+
+                    </div>
+                    <div v-if="visualizacionstep">
+                        <el-steps :active="active" finish-status="success">
+                            <el-step title="Step 1"></el-step>
+                            <el-step title="Step 2"></el-step>
+                        </el-steps>
+                        <div class="ln_solid"></div>
+                        <label>{{ruleForm}}</label>
+                        <el-form v-if="active===1" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" size="mini" class="ruleForm">
+                            <h1 class="section_title"><i class="el-icon-user"></i><b>Datos Exportador/Importador y de recepcion carga</b></h1>
+                            <div class="ln_solid"></div>
+                            <el-col :span="16">
+                                <el-form-item label="Exportador" prop="exportador">
+                                    <autocomplete tipo="Exportador"
+                                                  v-on:select="handleSelectExportador"
+                                                  v-on:cargarlista="cargarExportador"
+                                                  metodocargar="../api/Login/CargarDatos"
+                                                  :objeto="ruleForm.exportador"
+                                                  v-on:change="handleChangeAutoCompleteexportador"></autocomplete>
+                                    <button type="button" class="btn btn-info btn-xs" v-on:click="adicionarexportador"><i class="el-icon-plus"></i></button>
+                                    <button type="button" class="btn btn-success btn-xs" v-on:click="buscarexportador"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                </el-form-item>
+                                <el-form-item label="Importador" prop="importador">
+                                    <autocomplete tipo="Importador"
+                                                  v-on:select="handleSelectImportador"
+                                                  v-on:cargarlista="cargarImportador"
+                                                  metodocargar="../api/Login/CargarDatos"
+                                                  :objeto="ruleForm.importador"
+                                                  v-on:change="handleChangeAutoCompleteimportador"></autocomplete>
+                                    <button type="button" class="btn btn-info btn-xs" v-on:click="adicionarimportador"><i class="el-icon-plus"></i></button>
+                                    <button type="button" class="btn btn-success btn-xs" v-on:click="buscarimportador"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                </el-form-item>
+                                <el-form-item label="Fecha Recepción de la carga" prop="fecharecepción">
+                                    <fechahoracalendario :tipo="ruleForm.fecharecepción"
+                                                         placeholder="Ingrese Fecha Recepción"
+                                                         v-on:change="guardarfecharecepción">
+                                    </fechahoracalendario>
+                                </el-form-item>
+                                <el-form-item label="Fecha en que debe ser despachada" prop="fechadespacho">
+                                    <fechacalendario :tipo="ruleForm.fechadespacho"
+                                                     placeholder="Ingrese Fecha despacho"
+                                                     v-on:change="guardarfechadespacho">
+                                    </fechacalendario>
+                                </el-form-item>
+                                <el-form-item label="Carga entregada por (transportador, shipper...Indicar razon social)=">
+                                    <el-input placeholder="Ingrese Carga entregada por:"
+                                              v-model="ruleForm.cargaentregada"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Carga Recibida por=">
+                                    <el-input placeholder="Ingrese Carga Recibida por:"
+                                              v-model="ruleForm.cargarecibida"></el-input>
+                                </el-form-item>
+                                <el-form-item label="Lugar de Almacenaje en Bodega" prop="lugarbodega">
+                                    <seleccion tipo="LugarBodega"
+                                               metodocargar="../api/Login/CargarDatos"
+                                               :opcionseleccionada="ruleForm.lugarbodegaselecionado"
+                                               :datoseleccion="ruleForm.lugarbodega"
+                                               placeholder="Ingrese Lugar de Almacenaje en Bodega"
+                                               v-on:cargarseleccion="cargarlugarbodega"
+                                               v-on:change="cambiolugarbodega">
+                                    </seleccion>
+                                </el-form-item>
+                                <el-form-item label="Descripción de Almacenaje en Bodega" prop="lugarbodega">
+                                    <el-input placeholder="Ingrese descripción del lugar como observación:"
+                                              v-model="ruleForm.descripcionlugarbodega">
+                                    </el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col>
+                                <div class="ln_solid"></div>
+                                <el-form size="mini">
+                                    <el-form-item>
+                                        <div>
+                                            <div>
+                                                <h1 class="section_title"><b>Detalles de la mercancía Generales</b></h1>
+                                            </div>
+                                            <div class="ln_solid"></div>
+                                            <h5>
+                                                Confirmar el tipo de mercancía que esta manejando.
+                                            </h5>
+                                            <div class="ln_solid"></div>
+                                            <el-col :span="24">
+                                                <tablaedit :columnas="columnatabladetallesmercancia" :datos="datotabladetallesmercancia" :datofila="datocolumnadetallesmercancia" size="mini"></tablaedit>
+                                            </el-col>
+                                            <div class="ln_solid"></div>
+                                        </div>
+                                    </el-form-item>
+                                    <el-form-item>
+                                        <div>
+                                            <div class="ln_solid"></div>
+                                            <div>
+                                                <h5> ¿Se asegura la mercancía?</h5>
+                                            </div>
+                                            <div class="ln_solid"></div>
+                                           
+
+                                            <el-col :span="24">
+                                                <tablaformulario :columnas="columnatablamercanciaasegurada" :datostabla="datotablamercanciaasegurada" :datoscolumna="datotablamercanciaaseguradacolumna" :datofila="datocolumnamercanciaasegurada" size="mini"></tablaformulario>
+                                            </el-col>
+                                            <label>{{datocolumnamercanciaasegurada}}</label>
+                                            <div class="ln_solid"></div>
+                                        </div>
+                                    </el-form-item>
+                                </el-form>
+                            </el-col>
+                        </el-form>
+                        <el-form v-if="active===2" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" size="mini" class="ruleForm">
+                            <div v-if="visibilidadfatorestivas">
+                                <h5> El calculo de peso volumen conforme al factor de estiba del modo de transporte</h5>
+                                <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                    <el-form-item label="Factor Estiba:">
+                                        <el-input placeholder="Ingrese Factor Estiba:"
+                                                  :disabled="factorestibabloqueo"
+                                                  v-model="ruleForm.factorestiba">
+                                        </el-input>
+                                    </el-form-item>
+                                </el-row>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <h5>
+                                Porfavor seleccionar la opcion por la cual desea ingresar la descripcion de la mercancia, por defecto se encuentra seleccionado descripcion general.
+                            </h5>
+                            <template>
+                                <el-checkbox v-model="checkeddescripciongeneral" v-on:change="cambiodescripciongeneral">Descripcion general mercancia</el-checkbox>
+                                <el-checkbox v-model="checkeddescripcioncasilla" v-on:change="cambiodescripcioncasilla">Descripcion por cada una de las carga  </el-checkbox>
+                            </template>
+                            <div class="ln_solid"></div>
+                            <div>
+                                <el-form size="mini">
+                                    <el-form-item>
+                                        <div>
+                                            <el-col :span="24">
+
+                                                <tablaedit :columnas="columnatablawarehouse" :datos="datotablawarehouse" :datofila="datocolumnawarehouse" size="mini" v-on:accionclick="accionclikc" :summary="summary" :columnasuma="columnasuma" v-on:editardato="editardato" v-on:deshaceropcion="deshaceropcion" v-on:editaropcion="editaropcion" v-on:change="adicionardatoentablasuma"></tablaedit>
+                                            </el-col>
+                                            <div class="ln_solid"></div>
+                                        </div>
+                                    </el-form-item>
+                                    <el-col :span="9">
+                                        <br />
+                                        <h1 class="section_title"><b>adjuntar fotos de toda la carga</b></h1>
+                                        <el-card class="box-card">
+                                            <el-form-item label="Adjuntar">
+                                                <adjunto>
+                                                </adjunto>
+                                            </el-form-item>
+                                            <el-form-item label="Descripción general Mercancía ">
+                                                <el-input placeholder="Ingrese Descripcion"
+                                                          :disabled="!checkeddescripciongeneral"
+                                                          v-model="ruleForm.descripciongeneralmercancia"
+                                                          type="textarea"></el-input>
+                                            </el-form-item>
+                                        </el-card>
+                                    </el-col>
+                                    <el-col :span="14" :offset="1">
+                                        <br />
+                                        <h1 class="section_title"><b>adjuntar documentos</b></h1>
+                                        <el-form-item>
+                                            <tablaedit :columnas="columnatablaadjuntodomuento" :datos="datotablaadjuntodomuento" :datofila="datocolumnaadjuntodomuento" size="mini" v-on:clickcolumn="accionclicktipodocumento"></tablaedit>
+                                        </el-form-item>
+                                    </el-col>
+                                    <div class="ln_solid"></div>
+                                </el-form>
+                            </div>
+
+                        </el-form>
+                        <el-button v-show="botonnext" style="margin-top: 12px;" v-on:click="next('ruleForm')">Next step</el-button>
+                        <el-button v-show="!botonnext" style="margin-top: 12px;" v-on:click="previo">previo step</el-button>
+                    </div>
+                </div>
+
+            </el-form>
+            <el-dialog :visible.sync="dialogFormDimensionesvolumen">
+                <el-form>
+                    <el-col :offset="9">
+                        <h1 class="section_title">
+                            <b>Datos Peso</b>
+                        </h1>
+                        <br />
+                    </el-col>
+                    <el-col :offset="6" :span="6">
+                        <label>Unidad de Medida</label>
+                    </el-col>
+                    <el-form-item prop="UnidadMedidaPesoBruto">
+                        <el-col :span="6" :offset="12">
+                            <seleccion tipo="UndmedidaPeso"
+                                       metodocargar="../api/Login/CargarDatos"
+                                       :opcionseleccionada="ruleForm.UnidadMedidaPesoBrutoselecionado"
+                                       :datoseleccion="ruleForm.UnidadMedidaPesoBruto"
+                                       placeholder="Ingrese Unidad Medida Volumen"
+                                       v-on:cargarseleccion="cargarUnidadMedidaPesoBruto"
+                                       v-on:change="cambioUnidadMedidaPesoBruto">
+                            </seleccion>
+                        </el-col>
+                    </el-form-item>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+
+
+                            <el-form-item label="Peso Neto" prop="UnidadMedidaPesoNeto">
+                                <el-col :span="12">
+                                    <el-input-number placeholder="Ingrese Peso Neto:"
+                                                     v-model="ruleForm.PesoNeto"
+                                                     :controls="false"></el-input-number>
+                                </el-col>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="12">
+
+                            <el-form-item label="Peso Bruto" prop="UnidadMedidaVolumen">
+                                <el-col :span="12">
+                                    <el-input-number placeholder="Ingrese Peso Bruto:"
+                                                     v-model="ruleForm.PesoBruto"
+                                                     v-on:change="cambiopesobrutovalor"
+                                                     :controls="false"></el-input-number>
+                                </el-col>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-form-item label="Numero de piezas" prop="Numero de piezas">
+                                <el-col :span="12">
+                                    <el-input-number placeholder="Ingrese Numero de Piezas:"
+                                                     v-model="ruleForm.numeropiezas"
+                                                     v-on:change="cambionumeropiezas"
+                                                     :controls="false"></el-input-number>
+                                </el-col>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+
+
+                    <el-row :gutter="20">
+                        <el-col :span="12">
+                            <el-checkbox v-model="checkeddimensiones" v-on:change="changedimensiones"><h1 class="section_title"><b>Dimensiones</b></h1></el-checkbox>
+                            <br />
+                            <div v-if="checkeddimensiones">
+                                <el-form-item label="Unidad de Medida" prop="UnidadMedidaDistancia">
+                                    <el-col :span="12">
+                                        <seleccion tipo="UndmedidaDistancia"
+                                                   metodocargar="../api/Login/CargarDatos"
+                                                   :opcionseleccionada="ruleForm.UnidadMedidaDistanciaselecionado"
+                                                   :datoseleccion="ruleForm.UnidadMedidaDistancia"
+                                                   placeholder="Ingrese UnidadMedidaDistancia"
+                                                   v-on:cargarseleccion="cargarUnidadMedidaDistancia"
+                                                   v-on:change="cambioUnidadMedidaDistancia">
+                                        </seleccion>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="largo" prop="largo">
+                                    <el-col :span="12">
+                                        <el-input-number placeholder="Ingrese Largo"
+                                                         v-model="ruleForm.largo"
+                                                         v-on:change="cambiolargo"
+                                                         :controls="false"></el-input-number>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="ancho" prop="ancho">
+                                    <el-col :span="12">
+                                        <el-input-number placeholder="Ingrese Ancho:"
+                                                         v-model="ruleForm.ancho"
+                                                         v-on:change="cambioancho"
+                                                         :controls="false"></el-input-number>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="alto" prop="alto">
+                                    <el-col :span="12">
+                                        <el-input-number placeholder="Ingrese Alto:"
+                                                         v-model="ruleForm.alto"
+                                                         v-on:change="cambioalto"
+                                                         :controls="false"></el-input-number>
+                                    </el-col>
+                                </el-form-item>
+                            </div>
+                        </el-col>
+
+
+                        <el-col :span="12">
+                            <el-checkbox v-model="checkedvolumen" v-on:change="changevolumen"><h1 class="section_title"><b>Volumen</b></h1></el-checkbox>
+                            <br />
+                            <div v-if="checkedvolumen">
+                                <el-form-item label="Unidad de Medida" prop="UnidadMedidaVolumen">
+                                    <el-col :span="12">
+                                        <seleccion tipo="UndmedidaVolumen"
+                                                   metodocargar="../api/Login/CargarDatos"
+                                                   :opcionseleccionada="ruleForm.UnidadMedidaVolumenselecionado"
+                                                   :datoseleccion="ruleForm.UnidadMedidaVolumen"
+                                                   placeholder="Ingrese Unidad Medida Volumen"
+                                                   v-on:cargarseleccion="cargarUnidadMedidaVolumen"
+                                                   v-on:change="cambioUnidadMedidaVolumen">
+                                        </seleccion>
+                                    </el-col>
+                                </el-form-item>
+                                <el-form-item label="volumen" prop="volumen">
+                                    <el-col :span="12">
+                                        <el-input-number placeholder="Ingrese volumen"
+                                                         v-model="ruleForm.volumen"
+                                                         v-on:change="cambiovolumen"
+                                                         :controls="false"></el-input-number>
+                                    </el-col>
+                                </el-form-item>
+                            </div>
+                            <el-form-item v-if="checkeddimensiones" label="volumen calculado" prop="volumencalculado">
+                                <el-col :span="12">
+                                    <label>{{ruleForm.volumencalculado}}{{texseleccion}} <sup>{{tex}}</sup> </label>
+                                </el-col>
+                                <label>{{texcbm}}</label>
+                                <el-col :span="12">
+                                    <label>{{texvol}}</label>
+                                </el-col>
+                            </el-form-item>
+                            <div v-if="checkeddimensiones">
+                                <label>{{pesovolumenmetrico}}</label>
+                                <label>{{pesovol}}</label>
+                            </div>
+                        </el-col>
+
+
+                    </el-row>
+                    <el-form-item label="PESO / VOLUMEN" prop="UnidadMedidaVolumen">
+                        <label>{{pesovolumentn}}</label>
+                        <br />
+                        <el-row :gutter="20">
+                            <el-col :offset="5"><label>{{pesovolumenlbs}}</label></el-col>
+                        </el-row>
+                    </el-form-item>
+                </el-form>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="formulariocancelar">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="formularioaceptar" :disabled="deshabilitaraceptar">Aceptar</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormexportador" title="Crear Exportador">
+                <formulario :forms="exportador" :datosruleform="ruleformexportador" :reglas="reglascliente" :validardatos="validarformulario" v-on:validaciontrue="validodatosexportador">
+
+                </formulario>
+                <el-button v-on:click="cancelarexportador">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptarexportador">Aceptar</el-button>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormimportador" title="Crear importador">
+                <formulario :forms="importador" :datosruleform="ruleformimportador" :reglas="reglascliente" :validardatos="validarformulario" v-on:validaciontrue="validodatosimportador">
+
+                </formulario>
+                <el-button v-on:click="cancelarimportador">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptarimportador">Aceptar</el-button>
+            </el-dialog>
+
+
+
+            <el-dialog title="Selección Exportador" :visible.sync="dialogFormExportadorbuscar">
+                <tablaseleccion :columnas="columnatablaexportadoreimportador" :datos="displayDataExportador" :busqueda="true" referencia="singleTable" v-on:changecurrent="changecurrentexportador" v-on:changesearch="recibirsearch" :search="search"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarseleccionexportador">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="confirmarseleccionexportador">Seleccionar</el-button>
+                    <el-button v-show="visualizareditar" v-on:click="editarexportador">Editar</el-button>
+                </span>
+                <el-pagination layout="prev, pager, next"
+                               :total="searchexportador.length"
+                               v-on:current-change="handleCurrentChange"
+                               :page-size="pageSize">
+                </el-pagination>
+            </el-dialog>
+            <el-dialog title="Selección Importador" :visible.sync="dialogFormImportadorbuscar">
+                <tablaseleccion :columnas="columnatablaexportadoreimportador" :datos="displayDataImportador" :busqueda="true" referencia="singleTable" v-on:changecurrent="changecurrentimportador" v-on:changesearch="recibirsearch" :search="search"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarseleccionimportador">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="confirmarseleccionimportador">Seleccionar</el-button>
+                    <el-button v-show="visualizareditar" v-on:click="editarimportador">Editar</el-button>
+                </span>
+                <el-pagination layout="prev, pager, next"
+                               :total="searchimportador.length"
+                               v-on:current-change="handleCurrentChange"
+                               :page-size="pageSize">
+                </el-pagination>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormexportadoreditar" title="Editar Exportador">
+                <formulario :forms="exportador" :datosruleform="ruleformeditarexportador" v-on:validaciontrue="validodatosexportadoreditar" :reglas="reglascliente" :valorautocomplete="valorautocomplete" :validardatos="validarformulario">
+                </formulario>
+                <el-button v-on:click="cancelarexportador">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptarexportadoreditar">Aceptar</el-button>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormimportadoreditar" title="Editar Importador">
+
+                <formulario :forms="importador" :datosruleform="ruleformeditarimportador" v-on:validaciontrue="validodatosimportadoreditar" :reglas="reglascliente" :valorautocomplete="valorautocomplete" :validardatos="validarformulario">
+
+                </formulario>
+
+                <el-button v-on:click="cancelarimportador">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptarimportadoreditar">Aceptar</el-button>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormcrearcliente" title="Crear Cliente">
+                <formulario :forms="crearcliente" :reglas="reglascliente" :validardatos="validarformulario" v-on:validaciontrue="validodatoscliente" :datosruleform="ruleformcliente">
+                </formulario>
+                <el-button v-on:click="cancelarcrearcliente">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptarcrearcliente">Aceptar</el-button>
+            </el-dialog>
+            <el-dialog title="Selección Cliente" :visible.sync="dialogFormcrearclientebuscar">
+                <tablaseleccion :columnas="columnatablacrearcliente" :datos="displayDatacrearcliente" :busqueda="true" referencia="singleTable" v-on:changecurrent="changecurrentcrearcliente" v-on:changesearch="recibirsearch" :search="search"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarseleccioncrearcliente">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="confirmarseleccioncliente">Seleccionar</el-button>
+                    <el-button v-show="visualizareditar" v-on:click="editarcliente">Editar</el-button>
+                </span>
+                <el-pagination layout="prev, pager, next"
+                               :total="searchcrearcliente.length"
+                               v-on:current-change="handleCurrentChange"
+                               :page-size="pageSize">
+                </el-pagination>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormeditarcliente" title="Editar Cliente">
+
+                <formulario :forms="crearcliente" :reglas="reglascliente" :datosruleform="ruleformeditarcliente" :validardatos="validarformulario" v-on:validaciontrue="validareditarcliente">
+
+                </formulario>
+
+                <el-button v-on:click="cancelareditarcliente">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptareditarcliente">Aceptar</el-button>
+            </el-dialog>
+            <el-dialog :visible.sync="dialogFormcreardo" title="Crear DO">
+
+                <formulario :forms="creardoform" :reglas="reglasdo" :validardatos="validarformulario" v-on:validaciontrue="validodatosdo" :datosruleform="ruleformcreardo">
+
+                </formulario>
+
+                <el-button v-on:click="cancelarcreardo">Cancelar</el-button>
+                <el-button type="primary" v-on:click="aceptarcreardo">Aceptar</el-button>
+            </el-dialog>
+            <el-dialog title="Consulta Warehouse" :visible.sync="dialogFormConsultawarehouse" width="80%">
+                <tablaseleccion :columnas="columnatablaconsultawarehouse" :datos="datosconsultawarehouse" referencia="singleTable" v-on:changecurrent="changecurrentconsultawarehouse" v-on:accionclick="detalleswarehouse"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarconsultawarehouse">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="copiarconsultawarehouse">Copiar Warehouse</el-button>
+                </span>
+            </el-dialog>
+
+            <el-dialog title="Detalles Warehouse" :visible.sync="dialogFormDetalleswarehouse" width="90%">
+                <tabla :columnas="columnatabladetalleswarehouse" :datos="datosdetalleswarehouse"></tabla>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelardetalleswarehouse">Cancelar</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="Consulta Warehouse" :visible.sync="dialogFormSeleccioncopiawarehouse" width="90%">
+                <label>Se muestran a continuacion los ultimos 20 warehouse receipt creadps por el cliente seleccionado. Puede seleccionar el que mas se ajuste a la nueca creacion.</label>
+                <br />
+                <tablaseleccion :columnas="columnatablaseleccioncopiawarehouse" :datos="datosseleccioncopiawarehouse" referencia="singleTable" v-on:changecurrent="changecurrentconsultacopiawarehouse" v-on:accionclick="detallescopiawarehouse"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarseleccioncopiawarehouse">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="copiarseleccionwarehouse">Copiar Warehouse</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="Detalles Warehouse" :visible.sync="dialogFormDetallescopiawarehouse" width="90%">
+                <tabla :columnas="columnatabladetalleswarehouse" :datos="datosdetallescopiawarehouse"></tabla>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelardetallescopiawarehouse">Cancelar</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="Tipo Mercancia Warehouse" :visible.sync="dialogFormTipomercanciawarehouse" width="90%">
+                <tabla :columnas="columnainfotipomercancia" :datos="datosinftipomercancia"></tabla>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelartipomercanciacopiawarehouse">Cancelar</el-button>
+                </span>
+            </el-dialog>
+            <el-dialog title="Tipo de documento" :visible.sync="dialogFormtipodocumento" width="30%">
+                
+                <el-input placeholder="Tipo de documento" v-model="Tipodedocumento"></el-input>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" v-on:click="aceptartipodocumento">Aceptar</el-button>
+                </span>
+            </el-dialog>
+        </div>
+    </div>
+</div>
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/CrearWarehouse.js")"></script>
+}

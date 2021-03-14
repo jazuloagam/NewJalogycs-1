@@ -1,0 +1,371 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Jalogycs</title>
+    <link href="~/public/src/scss/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/nprogress.css" rel="stylesheet" />
+    <link href="~/public/src/scss/green.css" rel="stylesheet" />
+    <link href="~/public/src/scss/dataTables.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/buttons.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/fixedHeader.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/responsive.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/scroller.bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/prettify.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/select2.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/switchery.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/starrr.css" rel="stylesheet" />
+    <link href="~/public/src/scss/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/pnotify.css" rel="stylesheet" />
+    <link href="~/public/src/scss/pnotify.buttons.css" rel="stylesheet" />
+    <link href="~/public/src/scss/pnotify.nonblock.css" rel="stylesheet" />
+    <link href="~/public/src/scss/daterangepicker.css" rel="stylesheet" />
+    <link href="~/public/src/scss/custom.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/vue-toast-notification.css" rel="stylesheet" />
+    <link href="~/public/src/scss/element.css" rel="stylesheet" />
+</head>
+<body class="nav-md">
+    <div class="container body">
+        <div class="main_container">
+            <div id="app-layout">
+                <div class="col-md-3 left_col">
+                    <div class="left_col scroll-view">
+                        <div class="navbar nav_title">
+                            <a href="" class="site_title">
+                                <i class="fa fa-globe"></i>
+                                <span>{{razonsocial}}</span>
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                        <!-- menu profile quick info -->
+                        <div class="profile clearfix">
+                            <div class="profile_pic">
+                                <img :src="fotourl" alt="..." class="img-circle profile_img">
+                            </div>
+                            <div class="profile_info">
+                                <span>Bienvenido,</span>
+                                <h2>{{nombreusuario}}</h2>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <!-- /menu profile quick info --> <br>
+                        <!-- sidebar menu -->
+                        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                            <div class="menu_section">
+                                <ul class="nav side-menu">
+                                    <li v-for="(opcion, indice) in menuizquierdo" :key="indice" v-bind:class="[opcion.Pagina == active ? classactive : '']" v-on:click="menu(opcion)">
+                                        <a><i :class="opcion.ClaseCss"></i>{{opcion.Pagina}}<span v-bind:class="[menuizquierdo[indice].Hijos.length == 0 ? '' : 'fa fa-chevron-down']"></span></a>
+                                        <ul class="nav child_menu" v-bind:style="[opcion.Pagina == active ? { display:'block' } : { display: 'none' } ]">
+                                            <li v-for="pagina in menuizquierdo[indice].Hijos"><a :href="pagina.Ruta">{{pagina.Pagina}}</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- /sidebar menu -->
+                        <!-- /menu footer buttons -->
+                        <div class="sidebar-footer hidden-small">
+                            <a data-toggle="tooltip"
+                               data-placement="top" title="Settings">
+                                <span class="glyphicon glyphicon-cog"
+                                      aria-hidden="true"></span>
+                            </a> <a data-toggle="tooltip" data-placement="top"
+                                    title="FullScreen">
+                                <span class="glyphicon glyphicon-fullscreen"
+                                      aria-hidden="true"></span>
+                            </a> <a data-toggle="tooltip" data-placement="top"
+                                    title="Lock">
+                                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
+                            </a> <a data-toggle="tooltip" data-placement="top" title="Logout"
+                                    href="login.html">
+                                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                        <!-- /menu footer buttons -->
+                    </div>
+                </div>
+                <div class="top_nav">
+                    <div class="nav_menu">
+                        <div class="navbar nav_title">
+                            <a href="" class="site_title">
+                                <i class="fa fa-wifi"></i>
+                                <span>Jalogycs</span>
+                            </a>
+                        </div>
+                        <nav>
+                            <div class="nav toggle">
+                                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+                            </div>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="">
+                                    <a href="javascript:;" class="user-profile dropdown-toggle"
+                                       data-toggle="dropdown" aria-expanded="false">
+                                        <img :src="fotourl"
+                                             alt="">{{nombreusuario}}<span class=" fa fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                        <li><a href="../../Usuario/PerfilUsuario"> Perfil</a></li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="badge bg-red pull-right">50%</span>
+                                                <span>Settings</span>
+                                            </a>
+                                        </li>
+                                        <li><a href="javascript:;">Help</a></li>
+                                        <li>
+                                            <a href="../../Home/Index">
+                                                <i class="fa fa-sign-out pull-right"></i>
+                                                Cerrar Sesión
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li role="presentation" class="dropdown">
+                                    <a href="javascript:;"
+                                       class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-bell"></i> <span class="badge bg-red">6</span>
+                                    </a>
+                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="text-center">
+                                                <a>
+                                                    <strong>See All Alerts</strong>
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li role="presentation" class="dropdown">
+                                    <a href="javascript:;"
+                                       class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
+                                        <i class="fa fa-envelope-o"></i> <span class="badge bg-green">6</span>
+                                    </a>
+                                    <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a>
+                                                <span class="image"><img :src="fotourl" alt="Profile Image"></span>
+                                                <span>
+                                                    <span>John Smith</span> <span class="time">
+                                                        3
+                                                        mins ago
+                                                    </span>
+                                                </span> <span class="message">
+                                                    Film festivals used to be do-or-die moments for movie
+                                                    makers. They were where...
+                                                </span>
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <div class="text-center">
+                                                <a>
+                                                    <strong>See All Alerts</strong>
+                                                    <i class="fa fa-angle-right"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="">
+                                    <a href="javascript:;" class="user-profile dropdown-toggle"
+                                       data-toggle="dropdown" aria-expanded="false">
+                                        <i class="menu-icon fa fa-wrench"></i>
+                                        Soporte <span class=" fa fa-angle-down"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-usermenu pull-right">
+                                        <li>
+                                            <form class="navbar-form navbar-left form-search" role="search">
+                                                <div class="form-group">
+                                                    <input placeholder="Ayuda" type="text">
+                                                </div>
+                                                <button type="button" class="btn btn-mini btn-info2">
+                                                    <i class="ace-icon fa fa-search icon-only bigger-110"></i>
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <span class="badge bg-red pull-right">50%</span>
+                                                <span>Settings</span>
+                                            </a>
+                                        </li>
+                                        <li><a href="javascript:;">Enviar Solicitud</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                    <div class="nav_menu">
+                        <nav>
+                            <ul class="nav navbar-nav">
+                                <li v-for="(opcion, indice) in menuprincipal" :key="indice" v-on:click="redireccionar(opcion)">
+                                    <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                        <i :class="opcion.ClaseCss"></i>{{opcion.Pagina}}<span v-bind:class="[menuprincipal[indice].Hijos.length == 0 ? '' : 'fa fa-angle-down']"></span>
+                                    </a>
+                                    <ul class="dropdown-menu dropdown-usermenu pull-left">
+                                        <li v-for="pagina in menuprincipal[indice].Hijos">
+                                            <a :href="pagina.Ruta"><i :class="pagina.ClaseCss"></i>{{pagina.Pagina}}</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <div class="right_col" role="main">
+                @RenderBody()
+            </div>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Mi aplicación ASP.NET</p>
+            </footer>
+        </div>
+    </div>    
+
+    <script src="@Url.Content("~/public/dist/js/main.js")"></script>
+    <script src="~/public/src/js/Plantilla/jquery.min.js"></script>
+    <script src="~/public/src/js/Plantilla/bootstrap.min.js"></script>
+    <script src="~/public/src/js/Plantilla/fastclick.js"></script>
+    <script src="~/public/src/js/Plantilla/nprogress.js"></script>
+    <script src="~/public/src/js/Plantilla/jquery.smartWizard.js"></script>
+    <script src="~/public/src/js/Plantilla/icheck.min.js"></script>
+    <script src="~/public/src/js/Plantilla/jquery.dataTables.min.js"></script>
+    <script src="~/public/src/js/Plantilla/dataTables.bootstrap.min.js"></script>
+    <script src="~/public/src/js/Plantilla/dataTables.buttons.min.js"></script>
+    <script src="~/public/src/js/Plantilla/buttons.bootstrap.min.js"></script>
+    <script src="~/public/src/js/Plantilla/buttons.flash.min.js"></script>
+    <script src="~/public/src/js/Plantilla/buttons.html5.min.js"></script>
+    <script src="~/public/src/js/Plantilla/buttons.print.min.js"></script>
+    <script src="~/public/src/js/Plantilla/dataTables.fixedHeader.min.js"></script>
+    <script src="~/public/src/js/Plantilla/dataTables.keyTable.min.js"></script>
+    <script src="~/public/src/js/Plantilla/dataTables.responsive.min.js"></script>
+    <script src="~/public/src/js/Plantilla/responsive.bootstrap.js"></script>
+    <script src="~/public/src/js/Plantilla/dataTables.scroller.min.js"></script>
+    <script src="~/public/src/js/Plantilla/jszip.min.js"></script>
+    <script src="~/public/src/js/Plantilla/pdfmake.min.js"></script>
+    <script src="~/public/src/js/Plantilla/vfs_fonts.js"></script>
+    <script src="~/public/src/js/Plantilla/bootstrap-progressbar.min.js"></script>
+    <script src="~/public/src/js/Plantilla/bootstrap-wysiwyg.min.js"></script>
+    <script src="~/public/src/js/Plantilla/jquery.hotkeys.js"></script>
+    <script src="~/public/src/js/Plantilla/prettify.js"></script>
+    <script src="~/public/src/js/Plantilla/jquery.tagsinput.js"></script>
+    <script src="~/public/src/js/Plantilla/switchery.min.js"></script>
+    <script src="~/public/src/js/Plantilla/select2.full.min.js"></script>
+    <script src="~/public/src/js/Plantilla/parsley.min.js"></script>
+    <script src="~/public/src/js/Plantilla/autosize.min.js"></script>
+    <script src="~/public/src/js/Plantilla/jquery.autocomplete.min.js"></script>
+    <script src="~/public/src/js/Plantilla/starrr.js"></script>
+    <script src="~/public/src/js/Plantilla/bootstrap-progressbar.min.js"></script>
+    <script src="~/public/src/js/Plantilla/icheck.min.js"></script>
+    <script src="~/public/src/js/Plantilla/pnotify.buttons.js"></script>
+    <script src="~/public/src/js/Plantilla/pnotify.nonblock.js"></script>
+    <script src="~/public/src/js/Plantilla/raphael.min.js"></script>
+    <script src="~/public/src/js/Plantilla/morris.min.js"></script>
+    <script src="~/public/src/js/Plantilla/moment.min.js"></script>
+    <script src="~/public/src/js/Plantilla/daterangepicker.js"></script>
+    <script src="~/public/src/js/Plantilla/custom.min.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,288 @@
+﻿@model Jalogycs.Models.InicioSesion.Registro
+
+@{
+    ViewBag.Title = "Registro";
+    Layout = "~/Views/Shared/_LayoutSinSesion.cshtml";
+}
+
+<div id="app-registro">
+    <header class="header__pantallaprincipal">
+        <div>
+            <a href=""><i class="fa fa-user"></i><span>PRE-REGISTRO</span></a>
+        </div>        
+    </header>
+    <section class="section__table">
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" class="ruleForm">
+            <section class="w100">
+                <h1 class="section_title"><i class="el-icon-user"></i><b>Datos de Contacto</b></h1>
+                <p class="section_title">Por favor ingresa los datos de tu empresa y de contacto</p>
+                <el-form-item class="label_white" label="Tipo de Documento" prop="tipodocumento">
+                    <seleccion tipo="TipoDocumento"
+                               metodocargar="../api/Login/CargarDatos"
+                               :opcionseleccionada="ruleForm.documentoseleccionado"
+                               placeholder="Ingrese tipo de documento"
+                               v-on:cargarseleccion="cargardatos"
+                               v-on:change="cambiotipodocumento">
+                    </seleccion>
+                </el-form-item>
+                <el-form-item class="label_white" label="Numero de Documento" prop="numerodocumento">
+                    <el-input v-model="ruleForm.numerodocumento"></el-input>
+                </el-form-item>
+                <el-form-item class="label_white" label="Razon Social" prop="razonsocial">
+                    <el-input v-model="ruleForm.razonsocial"></el-input>
+                </el-form-item>
+                <el-form-item class="label_white" label="Nombres" prop="nombres">
+                    <el-input v-model="ruleForm.nombres"></el-input>
+                </el-form-item>
+                <el-form-item class="label_white" label="Apellidos" prop="apellidos">
+                    <el-input v-model="ruleForm.apellidos"></el-input>
+                </el-form-item>
+                <el-form-item class="label_white" label="Correo Electronico" prop="mail">
+                    <el-input v-model="ruleForm.mail"></el-input>
+                </el-form-item>
+                <el-form-item class="label_white" label="Telefono" prop="telefono">
+                    <el-input v-model="ruleForm.telefono"></el-input>
+                </el-form-item>
+                <el-form-item class="label_white" label="Direccion" prop="direccion">
+                    <el-input v-model="ruleForm.direccion"></el-input>
+                </el-form-item>
+            </section>
+            <section class="w100">
+                <h1 class="section_title"><i class="el-icon-tickets"></i><b>Datos de Licencia</b></h1>
+                <p class="section_title">Por favor ingresa los datos de tu paises y usuarios pagados</p>
+                <el-table :data="opcionpaises"
+                          style="width: 100%"
+                          max-height="350"
+                          show-summary
+                          sum-text="Valor total de licencia y uso">
+                    <el-table-column fixed
+                                     prop="Pais"
+                                     label="Pais"
+                                     width="300">
+                        <template slot-scope="scope">
+                            <label v-show="!scope.row.editable">{{scope.row.Pais}}</label>
+                            <autocomplete v-show="scope.row.editable"
+                                          tipo="Pais"
+                                          v-on:cargarlista="cargarpaises"
+                                          v-on:select="handleSelect"
+                                          metodocargar="../api/Login/CargarDatos"
+                                          :objeto="pais"></autocomplete>
+                        </template>
+
+                    </el-table-column>
+                    <el-table-column prop="usuarios"
+                                     label="Usuarios"
+                                     width="100">
+                        <template slot-scope="scope">
+                            <label v-show="!scope.row.editable">{{scope.row.usuarios}}</label>
+                            <input v-show="scope.row.editable" id="usuarios" name="usuarios" class="form-control col-sm-7 col-xs-12" type="number" min="0" max="10" v-model="numusuarios">
+                        </template>
+                    </el-table-column>
+                    <el-table-column fixed="right"
+                                     label="Operaciones"
+                                     width="140">
+                        <template slot-scope="scope">
+                            <el-tooltip class="item" effect="dark" content="Adicionar" placement="top">
+                                <el-button v-show="(scope.row.editable && scope.$index == 0) && editar==0" v-on:click="adicionarpais()" type="primary" icon="el-icon-plus" size="mini" circle></el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="Editar" placement="top">
+                                <el-button v-show="(!scope.row.editable && scope.$index != 0) && editar==0" v-on:click="editarpais(scope)" type="success" icon="el-icon-edit" size="mini" circle></el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="Eliminar" placement="top">
+                                <el-button v-show="(opcionpaises.length>1 && !scope.row.editable && scope.$index != 0) && editar==0" v-on:click="eliminarpais(scope.$index)" type="danger" icon="el-icon-delete" size="mini" circle></el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="Editar" placement="top">
+                                <el-button v-show="editar==scope.$index && scope.$index != 0" v-on:click="editaropcion(scope)" type="info" icon="el-icon-check" size="mini" circle></el-button>
+                            </el-tooltip>
+                            <el-tooltip class="item" effect="dark" content="Deshacer" placement="top">
+                                <el-button v-show="editar==scope.$index && scope.$index != 0" v-on:click="deshaceropcion(scope)" type="info" icon="el-icon-close" size="mini" circle></el-button>
+                            </el-tooltip>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div>
+                    <p>Por favor adjunte el archivo de consignación</p>
+                    <el-upload class="upload-demo"
+                               action=""
+                               :limit="1"
+                               :on-preview="handlePreview"
+                               :on-remove="handleRemove"
+                               :on-exceed="handleExceed"
+                               :on-change="handleChange"
+                               :file-list="fileList"
+                               :auto-upload="false">
+                        <el-button size="small" type="primary">Clic para subir archivo</el-button>
+                        <div slot="tip" class="el-upload__tip">Solo archivos jpg/png con un tamaño menor de 500kb</div>
+                    </el-upload>
+                </div>
+            </section>
+        </el-form>
+    </section>
+    <section class="section__boton">
+        <div>
+            <el-button size="small" type="success" v-on:click="registrarpago('ruleForm')">Registrar Pago</el-button>
+            <el-button size="small" type="danger">Cancelar</el-button>
+        </div>                 
+    </section>
+</div>
+
+@*<div id="app-registro" class="registro">
+        <div class="container body">
+            <div class="main_container">
+                <div class="col-md-12">
+                    <div class="col-middle">
+                        <div style="text-align:center"><a href="" class="site_title"> <i class="fa fa-user"></i><span>PRE-REGISTRO</span></a></div>
+                        <div class="ln_solid"></div>
+                        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" class="ruleForm">
+                            <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                <el-col :span="11">
+                                    <el-row class="row-bg">
+                                        <el-col>
+                                            <h1 class="section_title"><i class="el-icon-user"></i><b>Datos de Contacto</b></h1>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row class="row-bg">
+                                        <p class="section_title">Por favor ingresa los datos de tu empresa y de contacto</p>
+                                    </el-row>
+                                    <el-row>
+                                        <el-form-item class="label_white" label="Tipo de Documento" prop="tipodocumento">
+                                            <seleccion tipo="TipoDocumento"
+                                                       metodocargar="../api/Login/CargarDatos"
+                                                       :opcionseleccionada="ruleForm.documentoseleccionado"
+                                                       placeholder="Ingrese tipo de documento"
+                                                       v-on:cargarseleccion="cargardatos"
+                                                       v-on:change="cambiotipodocumento">
+                                            </seleccion>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Numero de Documento" prop="numerodocumento">
+                                            <el-input v-model="ruleForm.numerodocumento"></el-input>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Razon Social" prop="razonsocial">
+                                            <el-input v-model="ruleForm.razonsocial"></el-input>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Nombres" prop="nombres">
+                                            <el-input v-model="ruleForm.nombres"></el-input>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Apellidos" prop="apellidos">
+                                            <el-input v-model="ruleForm.apellidos"></el-input>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Correo Electronico" prop="mail">
+                                            <el-input v-model="ruleForm.mail"></el-input>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Telefono" prop="telefono">
+                                            <el-input v-model="ruleForm.telefono"></el-input>
+                                        </el-form-item>
+                                        <el-form-item class="label_white" label="Direccion" prop="direccion">
+                                            <el-input v-model="ruleForm.direccion"></el-input>
+                                        </el-form-item>
+
+                                    </el-row>
+                                </el-col>
+                                <el-col :span="11">
+                                    <el-row class="row-bg">
+                                        <el-col>
+                                            <h1 class="section_title"><i class="el-icon-tickets"></i><b>Datos de Licencia</b></h1>
+                                        </el-col>
+                                    </el-row>
+                                    <el-row class="row-bg">
+                                        <p class="section_title">Por favor ingresa los datos de tu paises y usuarios pagados</p>
+                                    </el-row>
+                                    <el-row class="row-bg">
+                                        <el-table :data="opcionpaises"
+                                                  style="width: 100%"
+                                                  max-height="350"
+                                                  show-summary
+                                                  sum-text="Valor total de licencia y uso">
+                                            <el-table-column fixed
+                                                             prop="Pais"
+                                                             label="Pais"
+                                                             width="300">
+                                                <template slot-scope="scope">
+                                                    <label v-show="!scope.row.editable">{{scope.row.Pais}}</label>
+                                                    <autocomplete 
+                                                                  v-show="scope.row.editable" 
+                                                                  tipo="Pais" 
+                                                                  v-on:cargarlista="cargarpaises" 
+                                                                  v-on:select="handleSelect" 
+                                                                  metodocargar="../api/Login/CargarDatos"
+                                                                  :objeto="pais"></autocomplete>
+                                                </template>
+
+                                            </el-table-column>
+                                            <el-table-column prop="usuarios"
+                                                             label="Usuarios"
+                                                             width="100">
+                                                <template slot-scope="scope">
+                                                    <label v-show="!scope.row.editable">{{scope.row.usuarios}}</label>
+                                                    <input v-show="scope.row.editable" id="usuarios" name="usuarios" class="form-control col-sm-7 col-xs-12" type="number" min="0" max="10" v-model="numusuarios">
+                                                </template>
+                                            </el-table-column>
+                                            <el-table-column fixed="right"
+                                                             label="Operaciones"
+                                                             width="140">
+                                                <template slot-scope="scope">
+                                                    <el-tooltip class="item" effect="dark" content="Adicionar" placement="top">
+                                                        <el-button v-show="(scope.row.editable && scope.$index == 0) && editar==0" v-on:click="adicionarpais()" type="primary" icon="el-icon-plus" size="mini" circle></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Editar" placement="top">
+                                                        <el-button v-show="(!scope.row.editable && scope.$index != 0) && editar==0" v-on:click="editarpais(scope)" type="success" icon="el-icon-edit" size="mini" circle></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Eliminar" placement="top">
+                                                        <el-button v-show="(opcionpaises.length>1 && !scope.row.editable && scope.$index != 0) && editar==0" v-on:click="eliminarpais(scope.$index)" type="danger" icon="el-icon-delete" size="mini" circle></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Editar" placement="top">
+                                                        <el-button v-show="editar==scope.$index && scope.$index != 0" v-on:click="editaropcion(scope)" type="info" icon="el-icon-check" size="mini" circle></el-button>
+                                                    </el-tooltip>
+                                                    <el-tooltip class="item" effect="dark" content="Deshacer" placement="top">
+                                                        <el-button v-show="editar==scope.$index && scope.$index != 0" v-on:click="deshaceropcion(scope)" type="info" icon="el-icon-close" size="mini" circle></el-button>
+                                                    </el-tooltip>
+                                                </template>
+                                            </el-table-column>
+                                        </el-table>
+                                    </el-row>
+                                    <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                        <el-col>
+                                            <el-upload class="upload-demo"
+                                                       action=""
+                                                       :limit="1"
+                                                       :on-preview="handlePreview"
+                                                       :on-remove="handleRemove"
+                                                       :on-exceed="handleExceed"
+                                                       :on-change="handleChange"
+                                                       :file-list="fileList"
+                                                       :auto-upload="false">
+                                                <el-button size="small" type="primary">Clic para subir archivo</el-button>
+                                                <div slot="tip" class="el-upload__tip">Solo archivos jpg/png con un tamaño menor de 500kb</div>
+                                            </el-upload>
+                                        </el-col>
+                                    </el-row>
+                                </el-col>
+                            </el-row>
+
+
+
+                            <el-col>
+                                <div class="ln_solid"></div>
+                                    <el-row>
+                                        <el-form-item>
+                                            <el-button size="small" type="success" v-on:click="registrarpago('ruleForm')">
+                                                Registrar Pago
+                                            </el-button>
+                                            <el-button size="small" type="danger">
+                                                Cancelar
+                                            </el-button>
+                                        </el-form-item>
+                                    </el-row>
+                            </el-col>
+                        </el-form>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+    
+
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/Registro.js")"></script>
+}

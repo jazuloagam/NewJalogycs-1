@@ -1,0 +1,550 @@
+﻿
+@{
+    ViewBag.Title = "CrearTarifaProveedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="app-tarifaproveedor">
+    <div class="container body">
+        <div class="main_container">
+            <div style="text-align:center"><a href="" class="section_title label_black h3"> <i class="fa fa-user"></i><span>CREAR TARIFA PROVEEDOR</span></a></div>
+            <div class="ln_solid"></div>
+            <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="auto" size="mini" class="ruleForm">
+                <el-row>
+                    <main>
+
+                        <div>
+                            <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                <el-col :span="11">
+                                    <el-form-item label="Razón social proveedor" prop="razonsocial">
+                                        @*<el-input v-model="ruleForm.razonsocial" v-on:input="cambiorazonsocial"></el-input>*@
+                                        <autocomplete tipo="RazonSocial"  
+                                                      :deshabilitar="deshabilitar"
+                                                      v-on:select="handleSelectRazonSocial"
+                                                      metodocargar="../api/Login/CargarDatos"                                                      
+                                                      :objeto="ruleForm.razonsocial"></autocomplete>                                       
+                                    </el-form-item>
+                                </el-col>
+                            </el-row>
+                        </div>
+
+
+                        <main v-if="isver" :key="componentKey">
+                            <template>
+                                <div>
+                                    <el-row :gutter="20" type="flex" class="row-bg" justify="center">
+                                        <el-col :span="11">
+                                            <el-form-item v-if="!isaseguradora && !isdeposito && !ismensajeria" label="Origen" prop="origen">
+                                                <autocomplete tipo="Ciudad"
+                                                              :deshabilitar="deshabilitar"
+                                                              v-on:select="handleSelectOrigen"
+                                                              metodocargar="../api/Login/CargarDatos"
+                                                              :objeto="ruleForm.origen"></autocomplete>
+                                                <button type="button" class="btn btn-success btn-xs" v-on:click="abrirseleccionpuerto('origen')"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                            </el-form-item>
+                                            <el-form-item v-if="!isaseguradora && !isdeposito && !ismensajeria" label="Destino" prop="destino">
+                                                <autocomplete tipo="Ciudad"
+                                                              v-on:select="handleSelectDestino"
+                                                              v-on:cargarlista="cargarPuertos"
+                                                              :deshabilitar="deshabilitar"
+                                                              metodocargar="../api/Login/CargarDatos"
+                                                              :objeto="ruleForm.destino"></autocomplete>
+                                                <button type="button" class="btn btn-success btn-xs" v-on:click="abrirseleccionpuerto('destino')"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
+                                            </el-form-item>
+
+
+                                            
+                                                <el-form-item v-if="!isocultar" label="Modo de transporte" prop="modotransporteseleccionado">
+                                                    <seleccion tipo="ModoTransporte"
+                                                               metodocargar="../api/Login/CargarDatos"
+                                                               :opcionseleccionada="ruleForm.modotransporteseleccionado"
+                                                               placeholder="Ingrese modo de transporte"
+                                                               :datoseleccion="ruleForm.modotransporte"
+                                                               :deshabilitar="deshabilitar"
+                                                               v-on:cargarseleccion="cargarmodotransporte"
+                                                               v-on:change="cambiomodotransporte">
+                                                    </seleccion>
+                                                </el-form-item>
+                                            <template>
+                                                <el-form-item v-if="!isocultarto" label="Tipo de operación" prop="tipooperacionseleccionado">
+                                                    <seleccion tipo="TipoOperacion"
+                                                               metodocargar="../api/Login/CargarDatos"
+                                                               :opcionseleccionada="ruleForm.tipooperacionseleccionado"
+                                                               :datoseleccion="ruleForm.tipooperacion"
+                                                               :deshabilitar="deshabilitar"
+                                                               placeholder="Ingrese tipo de operación"
+                                                               v-on:cargarseleccion="cargartipooperacion"
+                                                               v-on:change="cambiotipooperacion">
+                                                    </seleccion>
+                                                </el-form-item>
+                                            </template>
+
+
+
+
+                                            <el-form-item v-if="!isvisualizacion && !ismodalidad" label="Modalidad" prop="modalidad">
+                                                <seleccion tipo="Modalidad"
+                                                           metodocargar="../api/Login/CargarDatos"
+                                                           :opcionseleccionada="ruleForm.modalidadseleccionado"
+                                                           :datoseleccion="ruleForm.modalidad"
+                                                           :deshabilitar="deshabilitar"
+                                                           placeholder="Ingrese tipo de modalidad"
+                                                           v-on:cargarseleccion="cargarmodalidad"
+                                                           v-on:change="cambiomodalidad">
+                                                </seleccion>
+                                            </el-form-item>
+
+
+
+                                            <el-form-item v-if="!istipocarga && !isocultartc" label="Tipo de Carga" prop="tipocargaseleccionado">
+                                                <seleccion tipo="TipoCarga"
+                                                           metodocargar="../api/Login/CargarDatos"
+                                                           :opcionseleccionada="ruleForm.tipocargaseleccionado"
+                                                           :datoseleccion="ruleForm.tipocarga"
+                                                           placeholder="Ingrese Tipo de carga"
+                                                           :deshabilitar="deshabilitartipocarga || deshabilitar"
+                                                           v-on:cargarseleccion="cargartipocarga"
+                                                           v-on:change="cambiotipocarga">
+                                                </seleccion>
+                                            </el-form-item>
+                                            <template>
+
+
+                                                <el-form-item v-if="!isvisualizacion2 && !isincoterm" label="Incoterm" prop="incoterm">
+                                                    <seleccion tipo="Incoterm"
+                                                               metodocargar="../api/Login/CargarDatos"
+                                                               :opcionseleccionada="ruleForm.incotermseleccionado"
+                                                               :datoseleccion="ruleForm.incoterm"
+                                                               :deshabilitar="deshabilitar"
+                                                               :borrado="true"
+                                                               placeholder="Ingrese Incoterm"
+                                                               v-on:cargarseleccion="cargarincoterm"
+                                                               v-on:change="cambioincoterm">
+                                                    </seleccion>
+                                                </el-form-item>
+
+                                                <template>
+                                                    <el-form-item v-if="!isaseguradora && !isdeposito && !isincoterm" label="Lugar de entrega">
+                                                       <el-input     placeholder="Ingrese Lugar de Entrega"                                                                  
+                                                                     :disabled="deshabilitarlugardeentrega || deshabilitar"
+                                                                      v-model="ruleForm.Lugarentrega"></el-input>
+                                                    </el-form-item>
+                                                </template>
+                                            </template>
+
+                                            <el-form-item v-if="!isaseguradora" label="Caracteristicas de Mercancia" prop="Caracteristicasmercancia">
+                                                <seleccionmultiple tipo="Caracteristicasmercancia"
+                                                                   metodocargar="../api/Login/CargarDatos"
+                                                                   :opcionseleccionada="ruleForm.caracteristicasmercanciaselecionada"
+                                                                   :datoseleccion="ruleForm.caracteristicasmercancia"
+                                                                   :colageseleccion=false
+                                                                   :deshabilitar="deshabilitar"
+                                                                   multiple placeholder="Ingrese Caracteristicas de Mercancia"
+                                                                   v-on:cargarseleccion="cargararacteristicasmercancia"
+                                                                   v-on:change="cambioaracteristicasmercancia">
+                                                </seleccionmultiple>
+                                            </el-form-item>
+                                            <el-form-item v-if="isdeposito || ismensajeria" label="Tipo de Mercancia" prop="TipoMercancia">
+                                                <seleccion tipo="TipoMercancia"
+                                                           metodocargar="../api/Login/CargarDatos"
+                                                           :opcionseleccionada="ruleForm.tipomercanciaseleccionado"
+                                                           :datoseleccion="ruleForm.tipomercancia"
+                                                           :deshabilitar="deshabilitar"
+                                                           placeholder="Ingrese Tipo de Mercancia"
+                                                           v-on:cargarseleccion="cargartipomercancia"
+                                                           v-on:change="cambiotipomercancia">
+                                                </seleccion>
+                                            </el-form-item>
+                                            <el-form-item v-if="!isaseguradora" label="Vigencia" prop="vigencia">
+                                                <fechacalendario :tipo="ruleForm.vigencia"
+                                                                 :deshabilitar="deshabilitar"
+                                                                 placeholder="Ingrese Vigencia"                                                                 
+                                                                 v-on:change="guardarfechavigencia">
+                                                </fechacalendario>
+                                            </el-form-item>
+
+                                        </el-col>
+                                    </el-row>
+                                </div>
+                                <div v-if="botonesprincipal">
+                                    <el-row>
+                                        <div>
+                                            <div class="ln_solid"></div>
+                                            <el-col>
+                                                <el-form-item>
+
+                                                    <el-button size="small" type="primary" v-on:click="open('ruleForm')">
+                                                        Crear Valores en sistema
+                                                    </el-button>
+                                                    <el-button size="small" type="primary" v-on:click="cambiarEstado('ruleForm')">
+                                                        Adjuntar tarifas
+                                                    </el-button>
+                                                    <el-button size="small" type="danger" v-on:click="cancelarvalorestarifa()">
+                                                        Cancelar
+                                                    </el-button>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </el-row>
+                                </div>
+                                <template >
+                                    <el-form size="mini" v-show="!isaseguradora && !seletarifaproveedor && !ismensajeria && !isdeposito">
+                                        <el-row>
+                                            <div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Seleccionar tarifa proveedor</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h5>
+                                                        A continuación se
+                                                        relacionan las ultimas 5 tarifas ingresadas para este
+                                                        proveedor, bajo el modo de transporte y tipo de carga
+                                                        ingresado en otras ocasiones, si desea utilizar alguna
+                                                        de estas plantillas para la nueva tarifa a ingresar,
+                                                        puede seleccionar la que mas se ajuste y cargar la
+                                                        plantilla de conceptos para la tarifa, de lo contrario
+                                                        puede cancelar para el ingreso sin plantilla.
+                                                    </h5>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <el-col :span="24">
+                                                    <tablaseleccion :columnas="columnatablaselecciontarifa" :datos="datotablaselecciontarifa" :key="componentKey" referencia="singleTable" v-on:changecurrent="changecurrenttarifa" v-on:changeselection="changeselecciontarifa"></tablaseleccion>
+                                                </el-col>
+                                                <div class="ln_solid"></div>
+                                                <el-col>
+                                                    <el-form-item>
+                                                        <el-button size="small" type="success" v-on:click="cargarconceptostarifa()" :disabled="bottonhabilitar">
+                                                            Cargar Conceptos Tarifa
+                                                        </el-button>
+                                                        <el-button size="small" type="danger" v-on:click="cancelarconceptotarifa()">
+                                                            Cancelar
+                                                        </el-button>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </div>
+                                        </el-row>
+                                    </el-form>
+                                </template>
+
+
+
+                                <template>
+                                    <el-form size="mini" v-show="!conceptos && adjuntartarifas && !isaseguradora && !ismensajeria">
+                                        <el-row>
+                                            <div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Cargar conceptos</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <el-col :span="24">
+                                                    <tablaedit :columnas="columnatablaconceptotarifa" :datos="datotablaconceptotarifa" :key="componentKey" :datofila="datocolumnaconceptotarifa" size="mini" :idarraycoldatoseleccion="columnaidcambiodatoseleccion" v-on:cambioseleccion="cambioselecciontabla" v-on:cargarseleccion="cargarselecciontablaconceptotarifa" v-on:change="changetablaedit" v-on:changeeliminacion="changetablaediteliminacion"  :cancelaropcion="cancerlartarifaedit" :adicionaropcion="validarcreartarifa" v-on:validacionespaso="validacionespaso"></tablaedit>
+                                                </el-col>
+                                                <div class="ln_solid"></div>
+
+                                                <el-col>
+                                                    <div class="ln_solid"></div>
+                                                    <el-row justify="center" :gutter="180" type="flex" >
+                                                        <template >
+                                                            <el-form-item label="Observacion para la tarifa">
+                                                                <el-input placeholder="observacion para la tarifa"
+                                                                          v-model="observacion"
+                                                                          type="textarea"
+                                                                          style="width : 850px"
+                                                                          :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+                                                            </el-form-item>
+                                                        </template>
+                                                    </el-row>
+                                                    <div class="ln_solid"></div>
+                                                    <el-form-item>
+                                                        <el-button size="small" type="success" v-on:click="creartarifa('crearconcepto')" :disabled="bottonhabilitarcreartarifa">
+                                                            Crear Tarifas
+                                                        </el-button>
+                                                        <el-button size="small" type="danger" v-on:click="cancelartarifa()">
+                                                            Cancelar
+                                                        </el-button>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </div>
+                                        </el-row>
+
+                                    </el-form>
+                                </template>
+
+                                <div v-show="!adjuntartarifas && conceptos && !isaseguradora">
+                                    <el-form size="mini">
+                                        <el-row>
+                                            <div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Adjuntar tarifa</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <el-col :span="24">
+                                                    <tablaedit :columnas="columnatablaadjuntotarifa" :datos="datotablaadjuntotarifa" :datofila="datocolumnaadjuntotarifa" size="mini" v-on:change="changetablaedit" v-on:changeeliminacion="changetablaediteliminacion"  :adicionaropcion="validarcreartarifa" v-on:validacionespaso="validacionespaso"></tablaedit>
+                                                </el-col>
+                                                <div class="ln_solid"></div>
+                                                <el-col>
+                                                    <el-form-item>
+                                                        <el-button size="small" type="success" v-on:click="creartarifa('adjuntartarifa')" :disabled="bottonhabilitarcreartarifaadjunto">
+                                                            Adjuntar Tarifa
+                                                        </el-button>
+                                                        <el-button size="small" type="danger" v-on:click="cancelartarifaadjunto()">
+                                                            Cancelar
+                                                        </el-button>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </div>
+                                        </el-row>
+                                    </el-form>
+
+                                </div>
+                            </template>
+
+                            <template>
+                                <template >
+                                    <el-form size="mini" v-show="!seletarifaproveedor && isaseguradora && !ismensajeria && !isdeposito ">
+                                        <el-row>
+                                            <div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Seleccionar tarifa proveedor</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h5>
+                                                        A continuación se
+                                                        relacionan las ultimas tarifas de seguro ingresadas, si
+                                                        algun tipo de mercancía se ajusta a la nueva tarifa que
+                                                        va a ingresar, puede seleccionar las que considere, de
+                                                        lo contrario puede cerrar o cancelar para el ingreso sin
+                                                        plantilla
+                                                    </h5>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <el-col :span="24">
+                                                    <tablaseleccion :columnas="columnatablaseleccionseguro" :datos="datotablaseleccionseguro" referencia="multipleTable" v-on:changecurrent="changecurrentorigen" v-on:changeselection="changeselecciontarifa"></tablaseleccion>
+                                                </el-col>
+                                                <div class="ln_solid"></div>
+                                                <el-col>
+                                                    <el-form-item>
+                                                        <el-button size="small" type="success" v-on:click="cargarconceptostarifaseguro()" :disabled="bottonhabilitar">
+                                                            Cargar Conceptos Tarifa
+                                                        </el-button>
+                                                        <el-button size="small" type="danger" v-on:click="cancelarconceptotarifaseguro()">
+                                                            Cancelar
+                                                        </el-button>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </div>
+                                        </el-row>
+                                    </el-form>
+                                </template>
+
+
+                                <template >
+                                    <el-form size="mini" v-show="!conceptos && adjuntartarifas && isaseguradora && !ismensajeria && !isdeposito">
+                                        <el-row>
+                                            <div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Cargar conceptos</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <el-col :span="24">
+                                                    <tablaedit :columnas="columnatablasegurotarifa" :datos="datotablasegurotarifa" :datofila="datocolumnasegurotarifa" size="mini" v-on:cambioseleccionmultiple datocolumnaadjuntoseguro="cambioselecciontabla" :cancelaropcion="cancerlartarifaedit" v-on:change="changetablaedit" v-on:changeeliminacion="changetablaediteliminacion"  :adicionaropcion="validarcreartarifa" v-on:validacionespaso="validacionespaso"></tablaedit>
+                                                </el-col>
+                                                <div class="ln_solid"></div>
+                                                <el-col>
+                                                    <el-form-item>
+                                                        <el-button size="small" type="success" v-on:click="creartarifa('crearconceptoseguro')" :disabled="bottonhabilitarcreartarifaaseguradora">
+                                                            Crear Tarifas
+                                                        </el-button>
+                                                        <el-button size="small" type="danger" v-on:click="cancelartarifa()">
+                                                            Cancelar
+                                                        </el-button>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </div>
+                                        </el-row>
+                                    </el-form>
+                                </template>
+
+                                <div >
+                                    <el-form size="mini" v-show="!adjuntartarifas & conceptos && isaseguradora && !ismensajeria && !isdeposito">
+                                        <el-row>
+                                            <div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Adjuntar tarifa</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <el-col :span="24">
+                                                    <tablaedit :columnas="columnatablaadjuntoseguro" :datos="datotablaadjuntoseguro" :datofila="datocolumnaadjuntoseguro" size="mini" v-on:change="changetablaedit" v-on:changeeliminacion="changetablaediteliminacion"  :adicionaropcion="validarcreartarifa" v-on:validacionespaso="validacionespaso"></tablaedit>
+                                                </el-col>
+                                                <div class="ln_solid"></div>
+                                                <el-col>
+                                                    <el-form-item>
+                                                        <el-button size="small" type="success" v-on:click="creartarifa('adjuntartarifaseguro')" :disabled="bottonhabilitarcreartarifaadjuntoseguro">
+                                                            Adjuntar Tarifa
+                                                        </el-button>
+                                                        <el-button size="small" type="danger" v-on:click="cancelartarifaadjuntoseguro()">
+                                                            Cancelar
+                                                        </el-button>
+                                                    </el-form-item>
+                                                </el-col>
+                                            </div>
+                                        </el-row>
+                                    </el-form>
+                                </div>
+                            </template>
+
+                            <template >
+                                <el-form size="mini" v-show="!isaseguradora && !seletarifaproveedor && (ismensajeria || isdeposito)">
+                                    <el-row>
+                                        <div>
+                                            <div class="ln_solid"></div>
+                                            <div v-if="ismensajeria">
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Seleccionar tarifa de Mensajeria</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h5>
+                                                        A continuación se
+                                                        relacionan las ultimas 5 tarifas ingresadas para este
+                                                        proveedor, si desea utilizar alguna de estas plantillas
+                                                        para la nueva tarifa a ingresar, puede seleccionas la que
+                                                        mas se ajuste y cargar la plantilla de conceptos para la tarifa,
+                                                        de lo contrario puede cerrar o cancelar para el ingreso sin plantilla.
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div v-else if="isdeposito">
+                                                <div>
+                                                    <h1 class="section_title"><i class="el-icon-user"></i><b>Seleccionar tarifa de Deposito</b></h1>
+                                                </div>
+                                                <div class="ln_solid"></div>
+                                                <div>
+                                                    <h5>
+                                                        A continuación se relacionan las ultimas 5 tarifas
+                                                        ingresadas bajo el mismo tipo de carga igresado en
+                                                        otras ocaciones, si desea utilizar alguna de estas plantillas
+                                                        para la nueva tarifa a ingresar, puede seleccionar la que mas
+                                                        se ajuste y carga la plantilla de conceptos para la tarifa,
+                                                        de lo contrario puede cerrar o cancelar para el ingreso sin plantilla.
+                                                    </h5>
+                                                </div>
+                                            </div>
+                                            <div class="ln_solid"></div>
+                                            <el-col :span="24">
+                                                <tablaseleccion :columnas="columnatablaseleccionmensajeriaydeposito" :datos="datotablaseleccionmensajeriaydeposito"  referencia="singleTable" v-on:changecurrent="changecurrenttarifa" v-on:changeselection="changeselecciontarifa"></tablaseleccion>
+                                            </el-col>
+                                            <div class="ln_solid"></div>
+                                            <el-col>
+                                                <el-form-item>
+                                                    <el-button size="small" type="success" v-on:click="cargarconceptostarifa()" :disabled="bottonhabilitar">
+                                                        Cargar Conceptos Tarifa
+                                                    </el-button>
+                                                    <el-button size="small" type="danger" v-on:click="cancelarconceptotarifa()">
+                                                        Cancelar
+                                                    </el-button>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </el-row>
+                                </el-form>
+                            </template>
+
+                            <template v-show="!conceptos && adjuntartarifas && !isaseguradora && ismensajeria ">
+                                <el-form size="mini"  v-show="!conceptos && adjuntartarifas && !isaseguradora && ismensajeria ">
+                                    <el-row>
+                                        <div>
+                                            <div class="ln_solid"></div>
+                                            <div>
+                                                <h1 class="section_title"><i class="el-icon-user"></i><b>Cargar conceptos</b></h1>
+                                            </div>
+                                            <div class="ln_solid"></div>
+                                            <el-col :span="24">
+                                                <tablaedit :columnas="columnatablamensajeriatarifa" :datos="datotablamensajeriatarifa" :key="componentKey" :datofila="datocolumnamensajeriatarifa" size="mini" :idarraycoldatoseleccion="columnaidcambiodatoseleccion" v-on:change="changetablaedit" v-on:changeeliminacion="changetablaediteliminacion"  :adicionaropcion="validarcreartarifa" v-on:validacionespaso="validacionespaso"></tablaedit>
+                                            </el-col>                                          
+                                            
+                                            <el-col>
+                                                <div class="ln_solid"></div>
+                                                <el-row justify="center" :gutter="180" type="flex">
+                                                    <template>
+                                                        <el-form-item label="Observacion para la tarifa">
+                                                            <el-input placeholder="observacion para la tarifa"
+                                                                      v-model="observacion"
+                                                                      type="textarea"
+                                                                      style="width : 850px"
+                                                                      :autosize="{ minRows: 2, maxRows: 4}"></el-input>
+                                                        </el-form-item>
+                                                    </template>
+                                                </el-row>
+                                                <div class="ln_solid"></div>
+                                                <el-form-item>
+                                                    <el-button size="small" type="success" v-on:click="creartarifa('crearconceptomensajeria')" :disabled="bottonhabilitarcreartarifamensajeria">
+                                                        Crear Tarifas
+                                                    </el-button>
+                                                    <el-button size="small" type="danger" v-on:click="cancelartarifa()">
+                                                        Cancelar
+                                                    </el-button>
+                                                </el-form-item>
+                                            </el-col>
+                                        </div>
+                                    </el-row>
+
+                                </el-form>
+                            </template>
+                        </main>
+                    </main>
+                </el-row>
+            </el-form>
+
+
+
+
+
+
+            <el-dialog title="Selección origen" :visible.sync="dialogFormOrigenVisible">
+                <tablaseleccion :columnas="columnatablapuerto" :datos="displayDataOrigen" :busqueda="true" referencia="singleTable" v-on:changecurrent="changecurrentorigen" v-on:changesearch="recibirsearch" :search="search"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarseleccionorigen">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="confirmarseleccionorigen">Seleccionar</el-button>
+                </span>
+                <el-pagination layout="prev, pager, next"
+                               :total="searchorigen.length"
+                               v-on:current-change="handleCurrentChange"
+                               :page-size="pageSize">
+                </el-pagination>
+            </el-dialog>
+            <el-dialog title="Selección destino" :visible.sync="dialogFormDestinoVisible">
+                <tablaseleccion :columnas="columnatablapuerto" :datos="displayDataDestino" :busqueda="true" referencia="singleTable" v-on:changecurrent="changecurrentdestino" v-on:changesearch="recibirsearch" :search="search"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarselecciondestino">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="confirmarselecciondestino">Seleccionar</el-button>
+                </span>
+                <el-pagination layout="prev, pager, next"
+                               :total="searchdestino.length"
+                               v-on:current-change="handleCurrentChange"
+                               :page-size="pageSize">
+                </el-pagination>
+            </el-dialog>
+            <el-dialog title="Selección Proveedor" :visible.sync="dialogFormProveedorAgente">
+                <tablaseleccion :columnas="columnatablaproveedoragente" :datos="datostablaproveedoragente" referencia="singleTable" v-on:changecurrent="changecurrentproveedor"></tablaseleccion>
+                <span slot="footer" class="dialog-footer">
+                    <el-button v-on:click="cancelarseleccionproveedoragente">Cancelar</el-button>
+                    <el-button type="primary" v-on:click="confirmarseleccionproveedoragente">Seleccionar</el-button>
+                </span>
+            </el-dialog>
+        </div>
+    </div>
+</div>
+@section  scripts{
+    <script src="@Url.Content("~/public/dist/js/ProveedorTarifa.js")"></script>
+}
+
+

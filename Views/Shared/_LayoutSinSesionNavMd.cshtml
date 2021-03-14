@@ -1,0 +1,30 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>@ViewBag.Title - Jalogycs</title>
+    <link href="~/public/src/scss/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/font-awesome.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/nprogress.css" rel="stylesheet" />
+    <link href="~/public/src/scss/green.css" rel="stylesheet" />
+    <link href="~/public/src/scss/animate.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/custom.min.css" rel="stylesheet" />
+    <link href="~/public/src/scss/index.css" rel="stylesheet" />
+    <link href="~/public/src/scss/vue-toast-notification.css" rel="stylesheet" />
+    <link href="~/public/src/scss/element.css" rel="stylesheet" />
+</head>
+<body class="nav-md">
+    <div>
+        @RenderBody()
+    </div>
+    @RenderSection("scripts", required: false)
+    <script src="~/public/src/js/Plantilla/jquery.min.js"></script>
+    <script src="~/public/src/js/Plantilla/bootstrap.min.js"></script>
+    <script src="~/public/src/js/Plantilla/fastclick.js"></script>
+    <script src="~/public/src/js/Plantilla/nprogress.js"></script>
+    <script src="~/public/src/js/Plantilla/icheck.min.js"></script>
+    <script src="~/public/src/js/Plantilla/custom.min.js"></script>
+</body>
+</html>
