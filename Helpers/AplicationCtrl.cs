@@ -21,7 +21,7 @@ namespace Jalogycs.Helpers
         public static List<Dominio> TipoCarga { get; set; }
         public static List<Dominio> Modalidad { get; set; }
         public static List<Dominio> ModoTransporte { get; set; }
-        public static List<Dominio> Incoterm { get; set; }        
+        public static List<Dominio> Incoterm { get; set; }
         public static List<Dominio> TipoProveedor { get; set; }
         public static List<Dominio> RazonSocial { get; set; }
         public static List<Dominio> Item { get; set; }
@@ -42,6 +42,7 @@ namespace Jalogycs.Helpers
         public static List<Dominio> TipoDocumento { get; set; }
         public static List<Dominio> UN { get; set; }
         public static List<Dominio> TipoDocumentoArchivo { get; set; }
+        public static List<Dominio> Contactosinternos { get; set;}
         public static List<Cliente> Exportador { get; set; }
         public static List<Cliente> Importador { get; set; }
 
