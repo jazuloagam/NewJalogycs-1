@@ -56,6 +56,7 @@ namespace Jalogycs
             AplicationCtrl.TipoDocumento= DominioBLL.ObtenerDominioPorTipoDominio(Convert.ToInt64(Utilidades.Entidades.Enumeraciones.TipoDominio.TipoDocumento), null);
             AplicationCtrl.UN= DominioBLL.ObtenerDominioPorTipoDominio(Convert.ToInt64(Utilidades.Entidades.Enumeraciones.TipoDominio.UN), null);
             AplicationCtrl.TipoDocumentoArchivo = DominioBLL.ObtenerDominioPorTipoDominio(Convert.ToInt64(Utilidades.Entidades.Enumeraciones.TipoDominio.TipoDocumentoArchivo), null);
+            AplicationCtrl.Contactosinternos = DominioBLL.ObtenerDominioPorTipoDominio(Convert.ToInt64(Utilidades.Entidades.Enumeraciones.TipoDominio.Contactosinternos), null);
             AplicationCtrl.Matriz = new List<dynamic>() { new { idorigen=1, iddestino=1,tipo=1 },
                                                           new { idorigen=1, iddestino=2,tipo=1 },
                                                           new { idorigen=2, iddestino=3,tipo=1 },

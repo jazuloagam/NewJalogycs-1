@@ -782,8 +782,13 @@ namespace Jalogycs.Controllers
         public IHttpActionResult Observacionescorreo(TarifasDoModel modelo)
         {
             List<dynamic> observaciones = new List<dynamic>();
+           
             observaciones.Add(new {Observacion="carga recibida en bodega" });
+            if (modelo.IdCliente == 1)
+            {
+                observaciones.Add(new { Observacion = "estimado cliente su carga llego a bodega exitosamente" });
 
+            }
             dynamic Retorno = new
             {
                 Observaciones = observaciones
@@ -812,6 +817,24 @@ namespace Jalogycs.Controllers
                 return Json(JsonConvert.SerializeObject(Retorno));
             }
 
+        }
+        [HttpPost]
+        [ActionName("Notificacioninterna")]
+        public IHttpActionResult Notificacioninterna(TarifasDoModel modelo)
+        {
+            List<dynamic> observaciones = new List<dynamic>();
+
+            observaciones.Add(new { Observacion = "Status predeterminado usuario interno" });
+            if (modelo.IdCliente == 1)
+            {
+                observaciones.Add(new { Observacion = "OTRO" });
+
+            }
+            dynamic Retorno = new
+            {
+                Observaciones = observaciones
+            };
+            return Json(JsonConvert.SerializeObject(Retorno));
         }
     }
 

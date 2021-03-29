@@ -17,5 +17,13 @@ namespace Jalogycs.Controllers
         {
             return View();
         }
+        public ActionResult CrearWarehouse()
+        {
+            return View();
+        }
+        public ActionResult AdjuntarWarehouse()
+        {
+            return View();
+        }
     }
 }

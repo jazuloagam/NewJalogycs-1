@@ -203,6 +203,13 @@ namespace Jalogycs.Controllers
 
                     }
                     break;
+                case "Contactosinternos":
+                    List<Dominio> contactosinternos = AplicationCtrl.Contactosinternos;
+                    foreach (Dominio dominio in contactosinternos)
+                    {
+                        seleccionable.Add(new ObjetoSeleccionable { Id = dominio.idprograma, Nombre = dominio.nombre, ExpresionRegular = string.Empty, MensajeValidacion = string.Empty });
+                    }
+                    break;
                 case "TipoOperacion":
                     List<Dominio> tipooperacion = AplicationCtrl.TipoOperacion;
                     foreach (Dominio dominio in tipooperacion)

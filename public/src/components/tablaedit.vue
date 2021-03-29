@@ -12,7 +12,7 @@
                             </el-tooltip>
                         </template>
                         <template v-if="tipocolumna.tipoopccion=='boton'">
-                            <button type="button" class="btn btn-info btn-xs" v-on:click="accionbotoncolumna(columna.prop)"><i class="el-icon-plus"></i></button>
+                            <button type="button" :class="tipocolumna.class" v-on:click="accionbotoncolumna(columna.prop,tipocolumna.icono,tipocolumna.id )"><i :class="tipocolumna.icono"></i></button>
                         </template>
                     </span>
                 </template>
@@ -31,13 +31,13 @@
                             <div v-if="columna.popover==false || (Object.values(scope.row)[columna.id] != null && Object.values(scope.row)[columna.id].length==1) ">
                                 <label>{{imprimirseleccionmultiplenormal(Object.values(scope.row)[columna.id],columna.id,columna.cargarlista,columna.prop,columna.popover)}}</label>
                             </div>
-                            <div v-else>                                
+                            <div v-else>
                                 <el-popover placement="right"
-                                            width="600"                                          
+                                            width="600"
                                             trigger="click"
                                             v-on:after-enter="imprimirseleccionmultiple(Object.values(scope.row)[columna.id],columna.id,columna.cargarlista,columna.prop,columna.popover)">
-                                    <h1 class="section_title"><b>{{columna.unidad}}}</b></h1>
-                                    <el-table :data="datostablaanidada" style="width: 100%" >
+                                    <h1 class="section_title"><b>{{columna.unidad}}</b></h1>
+                                    <el-table :data="datostablaanidada" style="width: 100%">
                                         <el-table-column prop="Nombre" label="Nombre">
 
                                         </el-table-column>
@@ -66,7 +66,7 @@
                                 <div v-else>
                                     <el-button slot="reference" type="primary" icon="el-icon-search" size="mini" v-on:click="accionbotonvista(Object(scope.row)[columna.prop],columna.prop,scope)" circle></el-button>
                                 </div>
-                                
+
                             </div>
                             <div v-else>
                                 <div v-if="validarinformacion(Object.values(scope.row)[columna.id],columna.dimenciones)">
@@ -92,7 +92,7 @@
                                         <el-button slot="reference" type="primary" icon="el-icon-search" size="mini" circle></el-button>
                                     </el-popover>
                                 </div>
-                            </div>                            
+                            </div>
                         </div>
                         <div v-else-if="columna.tipo=='label'">
                             <div v-if="columna.collapse==true">
@@ -106,16 +106,36 @@
                                 <label>{{imprimirnormal(Object.values(scope.row)[columna.id])}}</label>
                             </div>
                         </div>
-                        <div v-else-if="columna.tipo=='labeltabla'">                            
+                        <div v-else-if="columna.tipo=='labeltabla'">
                             <el-collapse v-model="activeNames" @change="handleChange">
                                 <el-collapse-item :title="imprimirtitulo(scope.$index,columna.prop,columna.titulocollapse,columna.validartitulocollapse)" :name="columna.name">
                                     <el-table :data="Object.values(scope.row)[columna.id]" style="width: 100%">
                                         <el-table-column v-for="(columnaanidada,indexanidada) in columna.columnastabla" :key="columnaanidada.id" :prop="columnaanidada.prop" :label="columnaanidada.label">
 
-                                        </el-table-column>                                        
+                                        </el-table-column>
                                     </el-table>
                                 </el-collapse-item>
                             </el-collapse>
+                        </div>
+                        <div v-else-if="columna.tipo=='labelimpresion'">
+                            <div v-if="Object.values(scope.row)[columna.id].length <= 1">
+                                <label>{{imprimirnormalsolotexto(Object.values(scope.row)[columna.id],columna.prop)}}</label>
+                            </div>
+                            <div v-else>
+                                <el-popover placement="right"
+                                            width="600"
+                                            trigger="click"
+                                            fit="true"
+                                            size="small"
+                                            v-on:after-enter="imprimirpopoveer(Object.values(scope.row)[columna.id])">
+                                    <el-table :data="datostablaanidadapopoveer" style="width: 100%">
+                                        <el-table-column prop="Nombre" label="Nombre">
+
+                                        </el-table-column>
+                                    </el-table>
+                                    <el-button slot="reference" type="primary" icon="el-icon-search" size="mini" circle></el-button>
+                                </el-popover>
+                            </div>
                         </div>
                     </div>    
                     <div v-if="scope.row.editable">
@@ -165,8 +185,10 @@
                         <div v-else-if="columna.tipo=='autocomplete'">
                             <autocomplete :tipo="columna.tipoautocomplete"
                                           v-on:select="selectautocomplete"
+                                          v-on:cargarlista="cargarlista"
                                           :metodocargar="columna.metodo"
                                           :objeto="datofilamodel[columna.id].dato"
+                                          :opcionalcolumprop="columna.prop"
                                           :opcionalcolumaid="columna.id">
                             </autocomplete>
                         </div>
@@ -215,8 +237,7 @@
                         </div>                        
                     </div>
                 </template>
-            </el-table-column>
-            
+            </el-table-column>            
             <el-table-column width="100px" label="Operaciones" label-width="auto" size="mini" class="columna.prop">
                 <template slot-scope="scope">
                     <el-tooltip class="item" effect="dark" content="Adicionar" placement="top">
@@ -317,6 +338,9 @@
                 activeNames: ['1'],
                 prueba: [],
                 datosboton: [],
+                listacompleta: [],
+                listacambioseleun: [],
+                validacionmetodoadicionaropcion: false
             }
         },
         methods: {
@@ -517,12 +541,9 @@
                 return sums;
             },
             adicionardato(scope) {
-
                 if (this.validardatosedicion()) {
-                    
                     let datorepetido = JSON.parse(JSON.stringify(this.datos[0]));
                     //let datorepetido = Object.assign({}, this.datos[0]);
-                    
                     this.datos.push(datorepetido);
                     for (let value of this.columnas) {
                         for (let dato of this.datofilamodel) {
@@ -544,8 +565,10 @@
                         }
                     }
                     Reflect.set(this.datos[this.datos.length - 1], 'editable', false);
+                    this.validacionmetodoadicionaropcion = true;
                     this.$emit('change', this.datos, this.datofila, scope);
                 } else {
+                    this.validacionmetodoadicionaropcion = false;
                 } 
             },
             editardato(scope) {
@@ -593,8 +616,11 @@
                 this.$emit('changeeliminacion', this.datos);
             },
             imprimirseleccion(valor, id, lista, propiedad) {
-           
-                if (valor != null || valor != undefined) {
+                console.log("imprimir seleccion", valor, lista);
+                if (lista == undefined) {
+                    console.log("imprimirseleccion listacambioseleun", this.listacambioseleun, "valor",valor);
+                    return this.listacambioseleun[valor-1]
+                } else if (valor != null || valor != undefined) {
                     const found = lista.find(element => element.Id == valor);
                     
                     return found.Nombre;                   
@@ -729,14 +755,16 @@
                 this.datofilamodel[idcolumna].dato = valor;
                 this.cambioseleccion(valor, idcolumna, opcionarreglotablas);
             },
-            cambioseleccion(valor, idcolumna, opcionarreglotablas, opcionseleccionada, datoseleccion, prop, infocargarvalor,tipo) {
-                console.log("valor cambio seleccion", valor, opcionseleccionada, datoseleccion, prop, infocargarvalor[valor - 1], tipo);
+            cambioseleccion(valor, idcolumna, opcionarreglotablas, opcionseleccionada, datoseleccion, prop, infocargarvalor, tipo) {
+                console.log("valor cambio seleccion", valor, opcionseleccionada, datoseleccion, prop, "infocargarvalor", infocargarvalor, tipo);
                 this.$emit('cambioselecctablaedit', infocargarvalor[valor - 1]);
                 this.datofilamodel[idcolumna].dato = valor;
+                console.log("cambio seleccion no cambia", valor, this.datofilamodel[idcolumna].dato);
+
                 var lista = [];
                 let currentObj = this;
-                opcionarreglotablas.forEach(function callback(element, index, array) {                    
-                        // tu iterador
+                opcionarreglotablas.forEach(function callback(element, index, array) {
+                    // tu iterador
                     if (element.tipoopcion == 'deshabilitar') {
                         console.log("ingresa a el metodfo bien ")
                         currentObj.axios.post(element.nombremetodoconsulta, {
@@ -783,14 +811,16 @@
                         }
 
                     } else if (element.tipoopcion == 'cambio') {
-                        console.log("buscnaod columnas", currentObj.columnas );
-                        
+                        console.log("buscnaod columnas", currentObj.columnas);
+                        currentObj.listacambioseleun = infocargarvalor;
+                        console.log("lista cambioseleccion", currentObj.listacambioseleun);
                         element.informacioncompleta.forEach(function callback(elem) {
                             console.log("elem: ", elem.razonsocial, infocargarvalor[valor - 1]);
                             if (infocargarvalor[valor - 1] === elem.razonsocial) {
                                 elem.contactos.forEach(function callback(elemen) {
-                                    console.log("contactos tabla edit", elemen.contacto.nombre);                                    
+                                    console.log("contactos tabla edit", elemen.contacto.nombre);
                                     lista.push(elemen.contacto.nombre);
+                                    currentObj.listacompleta = lista;
                                     console.log("lista tabla edit", lista);
                                     var posicionencolumna = currentObj.columnas.findIndex(elemento => elemento.prop == element.queafecta);
                                     Reflect.set(currentObj.columnas[posicionencolumna], element.propafectar, lista);
@@ -799,20 +829,22 @@
                                     //console.log("contactos", currentObj.listaclientes);
                                     //Reflect.set(currentObj.columnatablacorreo[found2], 'infarray', currentObj.listaclientes);
                                 });
-                            }                           
-                            
+                            }
+
                         });
 
                     }
-                    
-                });
-               
-                
-               
 
-            },
+                });
+
+
+            },                
             selectautocomplete(valor, idcolumna) {
                 this.datofilamodel[idcolumna].dato = valor.value;
+            },
+            cargarlista(valor, prop) {
+                this.$emit('cargarlistaautocomplete', valor, prop);
+                console.log("cargar autocomplete", valor,"prop", prop);
             },
             cargarseleccionmultiple(valor, idcolumna, seleccion) {
                 this.$emit('cargarseleccionmultiple', valor, idcolumna, seleccion);
@@ -893,6 +925,10 @@
                         console.log("buscnaod columnas", currentObj.columnas);
                         element.informacioncompleta.forEach(function callback(elem) {
                             console.log("elem: ", elem.razonsocial, infocargarvalor[valor - 1]);
+                            if (infocargarvalor[valor - 1] == undefined && valor.length==0) {
+                                var posicionencolumnaeliminada = currentObj.datofila.findIndex(elemento => elemento.prop == element.queafecta);
+                                Reflect.set(currentObj.datofila[posicionencolumnaeliminada], 'dato', []);
+                            }
                             valor.forEach(function callback(ele) {
                                 console.log("valores", ele, infocargarvalor[ele - 1]);
                                 if (!nombres.includes(infocargarvalor[ele - 1])) {
@@ -907,7 +943,7 @@
 
                                                 lista.push(elemen.contacto.correo);
                                             }
-                                            console.log("lista tabla edit", lista);
+                                            console.log("lista tabla edit multiple:", lista);
                                             var posicionencolumna = currentObj.datofila.findIndex(elemento => elemento.prop == element.queafecta);
                                             Reflect.set(currentObj.datofila[posicionencolumna], 'dato', lista);
                                             console.log("columnas", currentObj.datofila[posicionencolumna]);
@@ -968,8 +1004,15 @@
                 });
             },
             imprimirseleccionmultiple(valor, id, lista, propiedad, impresion) {
+                console.log("imprimirseleccionmultiple", valor, propiedad);
                 this.datostablaanidada = [];
                 let currentObj = this;
+                if (lista == undefined) {
+                    valor.forEach(function callback(element, index, array) {
+                        currentObj.datostablaanidada.push({ Nombre: currentObj.listacompleta[element-1]});
+                    });
+                    return this.datostablaanidada;
+                }
                 if (valor != null) {
 
                     valor.forEach(function callback(elemento, index, array) {
@@ -986,9 +1029,17 @@
                 
             },
             imprimirseleccionmultiplenormal(valor, id, lista, propiedad) {
-                if (valor != null) {
-                    this.datostablaanidadanormal = [];
-                    let currentObj = this;
+                console.log("imprimirseleccionmultiplenormal", valor, lista);
+                this.datostablaanidadanormal = [];
+                let currentObj = this;
+                if (lista == undefined) {
+                    valor.forEach(function callback(element, index, array) {
+                        currentObj.datostablaanidadanormal.push(currentObj.listacompleta[element-1]);
+                    });
+                    return this.datostablaanidadanormal.join('; ');
+                }
+                else if (valor != null) {
+                   
 
 
                     valor.forEach(function callback(elemento, index, array) {
@@ -1043,14 +1094,20 @@
 
                             currentObj.datostablaanidadanormal.push(Object.values(elemento));
                         });
-
                         return this.datostablaanidadanormal.join('; ');
                     } else {
                         return valor;
                     }
                 } else
-                    return '';
-            
+                    return '';            
+            },
+            imprimirnormalsolotexto(valor, prop) {
+                this.datostablaanidadapopoveer = [];
+                let currentObj = this;
+                valor.forEach(function callback(element, index, array) {
+                    currentObj.datostablaanidadanormal.push(currentObj.listacompleta[element - 1]);
+                });
+                return this.datostablaanidadanormal.join(' ');
             },
             imprimirpopoveer(valor) {
                 this.datostablaanidadapopoveer = [];
@@ -1065,8 +1122,8 @@
                 console.log("accion boton",valor,prop);
                 this.$emit('accionclick', valor, prop, scope);
             },
-            accionbotoncolumna(prop) {
-                this.$emit('clickcolumn', prop);
+            accionbotoncolumna(prop,icono,id) {
+                this.$emit('clickcolumn', prop, icono, id);
             },
             accionbotonvista(valor, prop, scope) {
 
@@ -1124,20 +1181,39 @@
 
             },
             adicionaropcion(saa) {
+                console.log("adicionar opcion", this.mensajefaltandatos, this.mensajesvalidacion);
+                console.log("fila model", this.datofilamodel);
+                var isVacio = true;
                 for (let value of this.datofilamodel) {
-                    if (value.dato != '') {
-                        if (value.dato != 0) {
-                            if (value.dato != null) {
-                                if (value.dato != []) {
-                                    this.validardatosedicion();
-                                    break;
-                                } 
-                            }
-                        }
+                    if (value.dato == '' || value.dato == 0 || value.dato == null || value.dato == []) {
+                        isVacio = true;
                     } else {
-                        this.$emit('validacionespaso', this.valido, this.datofilamodel);
+                        isVacio = false;
                         break;
                     }
+                    //if (value.dato != '') {
+                    //    if (value.dato != 0) {
+                    //        if (value.dato != null) {
+                    //            if (value.dato != []) {
+                    //                this.validardatosedicion();
+                    //                break;
+                    //            } 
+                    //        }
+                    //    }
+                    //} else {
+                    //    console.log("adicionar opvion en else");
+                    //    this.$emit('validacionespaso', this.valido, this.datofilamodel);
+                    //    break;
+                    //}
+                }
+                if (isVacio == true) {
+                    this.$emit('validacionespaso', this.valido, this.datofilamodel);
+                } else {
+                    this.adicionardato(null);
+                    if (this.validacionmetodoadicionaropcion) {
+                        this.$emit('validacionespaso', this.valido, this.datofilamodel);
+                    }
+
                 }
             },
             cancelaropcion() {

@@ -78,7 +78,7 @@
                         currentObj.output = JSON.parse(response.data);
                         currentObj.objetos = currentObj.output["ObjetoAutocomplete"];
                         currentObj.objetoautocomplete = currentObj.objeto;
-                        currentObj.$emit('cargarlista', currentObj.objetos);                        
+                        currentObj.$emit('cargarlista', currentObj.objetos, currentObj.opcionalcolumprop);                        
                     })
                     .catch(function (error) {
                         currentObj.$message('No se pudo Iniciar Sesión');

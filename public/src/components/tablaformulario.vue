@@ -1,42 +1,41 @@
 ﻿<template>
     <div>
-        <label>{{datostabla}}</label>
-        <el-table :data="datostabla" :size="size" max-height="450">
+     
+        <el-table :data="datos" :size="size" max-height="450">
 
             <el-table-column v-for="(columna,index) in columnas" :key="columna.id" label-width="auto" size="mini" class="columna.prop" :width="columna.width" :fixed="columna.fixed" :prop="columna.prop" :label="columna.label" v-if="columna.filtro==true || columna.filtro==null" :type="columna.expand">
                 <template slot="header" v-if="columna.tipocolumna.length != 0">
-                    <label>{{columna.label}}</label>
                     <span v-for="(tipocolumna,indextipo) in columna.tipocolumna " :key="tipocolumna.id">
                         <el-tooltip class="item" effect="dark" :content="tipocolumna.descripcion" :placement="tipocolumna.posicion">
                             <i :class="tipocolumna.icono"></i>
                         </el-tooltip>
                     </span>
                 </template>
-                <template>
+                <template slot-scope="scope">
                     <div>
-                        <div v-if="columna.tipo=='input'">
-                            <el-input v-model="datos[columna.prop]" type="textarea"  autosize   :disabled="columna.deshabilitar"></el-input>
+                        <div v-if="columna.tipo=='checkbox'">
+                            <el-checkbox v-model="datos[columna.prop]"></el-checkbox>
                         </div>
                         <div v-else-if="columna.tipo=='inputnumber'">
-                            <el-input-number v-model="datos[columna.prop]"  :min="columna.min" :max="columna.max" :disabled="columna.deshabilitar" :precision="columna.precision" :controls="columna.controls"></el-input-number>
+                            <el-input-number v-model="datos[columna.prop]" :min="columna.min" :max="columna.max" :disabled="columna.deshabilitar" :precision="columna.precision" :controls="columna.controls"></el-input-number>
                         </div>
-                        <div v-else-if="columna.tipo=='checkbox'">
-                            <el-checkbox v-model="datos[columna.prop]"></el-checkbox>
+                        <div v-else-if="columna.tipo=='input'">
+                            <el-input v-model="datos[scope.$index][columna.prop]" type="textarea" autosize :disabled="scope.row.editable"></el-input>
                         </div>
                         <div v-else-if="columna.tipo=='seleccion'">
                             <seleccion :tipo="columna.tiposeleccion"
-                                   :metodocargar="columna.metodo"
-                                   :datoseleccion="columna.datoseleccion"
-                                   :placeholder="columna.placeholder"
-                                   :arreglotablas="columna.arreglotablas"
-                                   :opcionalcolumaid="columna.id"
-                                   :opcionseleccionada="datos[columna.prop]"
-                                   :infocargarvalor="columna.informacionlista"
-                                   :borrado="columna.borrado"
-                                   :opcionalcolumaprop="columna.prop"
-                                   v-on:cargarseleccion="cargarseleccion"
-                                   v-on:changelimpiar="cambioseleccionlimpiar"
-                                   v-on:change="cambioseleccion">
+                                       :metodocargar="columna.metodo"
+                                       :datoseleccion="columna.datoseleccion"
+                                       :placeholder="columna.placeholder"
+                                       :arreglotablas="columna.arreglotablas"
+                                       :opcionalcolumaid="columna.id"
+                                       :opcionseleccionada="datos[columna.prop]"
+                                       :infocargarvalor="columna.informacionlista"
+                                       :borrado="columna.borrado"
+                                       :opcionalcolumaprop="columna.prop"
+                                       v-on:cargarseleccion="cargarseleccion"
+                                       v-on:changelimpiar="cambioseleccionlimpiar"
+                                       v-on:change="cambioseleccion">
                             </seleccion>
                         </div>
                         <div v-else-if="columna.tipo=='seleccionmultiple'">
@@ -83,8 +82,20 @@
                             <button type="button" class="btn btn-success btn-xs" v-on:click="accionboton()"><i class="ace-icon fa fa-search align-top bigger-125"></i></button>
                         </div>
                         <div v-else-if="columna.tipo=='label'">
-
+                            <label>{{Object(scope.row)[columna.prop]}}</label>
                         </div>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column width="100px" label="Operaciones" label-width="auto" size="mini" class="columna.prop" v-if="botonescolum">
+                <template slot-scope="scope">
+                    <div>
+                        <el-tooltip class="item" effect="dark" content="Editar" placement="top">
+                            <el-button v-if="scope.row.editable" v-on:click="editardato(scope)" type="success" icon="el-icon-edit" size="mini" circle></el-button>
+                        </el-tooltip>
+                        <el-tooltip class="item" effect="dark" content="Editar" placement="top">
+                            <el-button v-if="!scope.row.editable" v-on:click="editaropcion(scope)" type="info" icon="el-icon-check" size="mini" circle></el-button>
+                        </el-tooltip>
                     </div>
                 </template>
             </el-table-column>
@@ -118,23 +129,16 @@
         props: {
             columnas: {
                 type: Array,
-                default:()=>[]
-            },
-            datoscolumna: {
-                type: Array,
                 default: () => []
-            },
-            datofila: {
-                type: Array,
-                default: () => []
-            },
+            },            
+
             datostabla: {
                 type: Array,
                 default: () => []
             },
             size: {
                 type: String,
-                default:'mini'
+                default: 'mini'
             },
             idarraycoldatoseleccion: {
                 type: Array,
@@ -156,13 +160,15 @@
                 type: Array,
                 default: () => []
             },
-
+            botonescolum: {
+                type: Boolean,
+                default: false
+            },
         },
         data() {
             return {
-                datos: this.datostabla[0],
+                datos: this.datostabla,
                 editar: 0,
-                datofilamodel: this.datofila,
                 cambiodatoseleccion: 0,
                 datostablaanidada: [],
                 propiedades: [],
@@ -175,9 +181,20 @@
                 activeNames: ['1'],
                 prueba: [],
                 datosboton: [],
+                deshabilitar:true,
             }
         },
         methods: {
+            editardato(scope) {
+
+                this.$emit('editardato', this.datos, scope.$index);
+                console.log("si es la columna", this.columnas);
+                scope.row.editable = false; 
+
+            },
+            editaropcion(scope) {
+                scope.row.editable = true; 
+            },
             afectacionenimput(datos,prop) {
                 console.log("tablaformulario afectaciones en imput ", datos, prop, Object.values(datos[0]),datos[0][prop]);
 

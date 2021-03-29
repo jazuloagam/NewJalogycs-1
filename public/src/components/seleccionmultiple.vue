@@ -7,7 +7,7 @@
                    v-bind:disabled="deshabilitar"
                    style="width:100%"
                    v-model="seleccion"
-                   filterable
+                   filterablev-on:clear="limpiar"
                    :placeholder="placeholder">
             <el-option v-for="opcion in lista"
                        :key="opcion.Id"

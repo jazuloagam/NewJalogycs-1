@@ -9,6 +9,7 @@ namespace Jalogycs.Models.Logistica
     public class TarifasDoModel
     {
         public long? IdTipoOperacion { get; set; }
+        public long? IdCliente { get; set; }
         public long IdModoTransporte { get; set; }
         public long? IdTipoCarga { get; set; }
         public string IdPuertoOrigen { get; set; }

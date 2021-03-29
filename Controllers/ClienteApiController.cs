@@ -15,6 +15,7 @@ namespace Jalogycs.Controllers
 {
     public class ClienteApiController : ApiController
     {
+        private object contacto;
 
         [HttpPost]
         [ActionName("Obtenercontactoscliente")]
@@ -32,13 +33,26 @@ namespace Jalogycs.Controllers
         [ActionName("Guardarcrearnuevocontacto")]
         public IHttpActionResult Guardarcrearnuevocontacto(Cliente modeloCliente)
         {
-            List<Personas.Entidades.Cliente> clientescontactos = ClienteBLL.ConsultarClientesPorCuenta(1);
-
+            List<ContactoCliente> contactosnew = new List<ContactoCliente>();
+            List <Personas.Entidades.Cliente> clientescontactos = ClienteBLL.ConsultarClientesPorCuenta(1);
+            List<Personas.Entidades.Cliente> newclientescontactos = ClienteBLL.ConsultarClientesPorCuenta(1);
+            
+            foreach (Cliente contacto in clientescontactos)
+            {
+                if (modeloCliente.razonsocial == contacto.razonsocial) {
+                    contactosnew = contacto.contactos;
+                    contactosnew.Add(new ContactoCliente { contacto = new Contacto { nombre = modeloCliente.contactos[0].contacto.nombre, telefono = modeloCliente.contactos[0].contacto.telefono, correo = modeloCliente.contactos[0].contacto.correo } });
+                    var x = newclientescontactos.FindIndex(element => element.razonsocial == modeloCliente.razonsocial);
+                    newclientescontactos[x].contactos = contactosnew;
+                }            
+            }
+            
             dynamic Retorno = new
             {
-                Contactos = clientescontactos
+                Contactos = newclientescontactos
             };
             return Json(JsonConvert.SerializeObject(Retorno));
+
         }
 
         [HttpPost]

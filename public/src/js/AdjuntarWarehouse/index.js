@@ -27,7 +27,7 @@ new Vue({
             ruleForm: {
                 TipoEmbalaje: [],
                 TipoEmbalajeselecionado: null,
-
+                Nowarehouse: '',
 
 
 
@@ -97,25 +97,28 @@ new Vue({
             metodocargarcontactos: '../api/ClienteApi/Obtenercontactoscliente',
             metodocargarobservacion: '../api/LogisticaApi/Observacionescorreo',
             metodoguardarcliente: '../api/ClienteApi/Guardarcrearnuevocontacto',
+            metodocarganotificaciones: '../api/LogisticaApi/Notificacioninterna',
 
             columnadatosgeneralcarga: [],
-            columnadatosgeneralcargainicial: [{ id: 0, label: 'Exportador', prop: 'Exportador', tipo: 'autocomplete', tipoautocomplete: 'Exportador', metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', fixed: false, width: '200px', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], cargarlista: [] },
-                { id: 1, label: 'Importador', prop: 'Importador', tipo: 'autocomplete', tipoautocomplete: 'Importador', metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', fixed: false, width: '200px', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], cargarlista: [] },
+            columnadatosgeneralcargainicial: [{ id: 0, label: 'Exportador', prop: 'Exportador', tipo: 'autocomplete', tipoautocomplete: 'Exportador', metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', fixed: false, width: '200px', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-plus', posicion: 'top', class: 'btn btn-info btn-xs' }, { id: 1, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'ace-icon fa fa-search align-top bigger-125', posicion: 'top', class: 'btn btn-success btn-xs' }], cargarlista: [] },
+                { id: 1, label: 'Importador', prop: 'Importador', tipo: 'autocomplete', tipoautocomplete: 'Importador', metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', fixed: false, width: '200px', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-plus', posicion: 'top', class: 'btn btn-info btn-xs' }, { id: 1, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'ace-icon fa fa-search align-top bigger-125', posicion: 'top', class: 'btn btn-success btn-xs' }], cargarlista: [] },
                 { id: 2, label: 'fecha de entrega/carga lista proveedor', prop: 'fechaentregalistproveedor', tipocolumna: [], tipo: 'fechacalendario', width: '300px', fixed: false },
                 { id: 3, label: 'detalles generales carga', prop: 'detallesgenerales', tablainterna: true, tipocolumna: [], unidad: 'unidad', sindatos: 'Sin Datos', tipo: 'boton', width: '200px', fixed: false, columnastabla: [{ id: 0, label: 'TipoEmbalaje', prop: 'TipoEmbalaje', tipo: 'seleccion', cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'TipoEmbalaje' }, { id: 1, label: 'numeropiezas', prop: 'numeropiezas' }, { id: 2, label: 'Unidad Medida', prop: 'UnidadMedidaPesoBrutoselecionado', tipo: 'seleccion', cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'UndmedidaPeso' }, { id: 3, label: 'PesoNeto', prop: 'PesoNeto' }, { id: 4, label: 'PesoBruto', prop: 'PesoBruto' }, { id: 5, label: 'Unidad Medida', prop: 'UnidadMedidaVolumenselecionado', tipo: 'seleccion', cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'UndmedidaVolumen' }, { id: 6, label: 'volumen', prop: 'volumen' }, { id: 7, label: 'pesovolumenmetrico', prop: 'pesovolumenmetrico' }, { id: 8, label: 'pesovolumentn', prop: 'pesovolumentn' }]  }, 
                 { id: 4, label: 'tipo mercancia', prop: 'tipomercancia', tablainterna: true, tipocolumna: [], unidad: 'unidad', sindatos: 'Sin Datos', tipo: 'boton', width: '200px', fixed: false, columnastabla: [{ id: 0, label: 'Caracteristicasmercancia', prop: 'Caracteristicasmercancia', tipo: 'seleccion', cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'Caracteristicasmercancia' }, { id: 1, label: 'TipoMercancia', prop: 'TipoMercancia', tipo: 'seleccion', cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'TipoMercancia' }, { id: 2, label: 'UN', prop: 'UN', tipo: 'seleccion', cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'UN' }] }, 
                 { id: 5, label: 'Descripcion mercancia', prop: 'Descripcionmercancia', tipocolumna: [], tipo: 'input', fixed: false, width: '200px', tipotex: 'textarea' },            
-                { id: 6, label: 'Adjuntar warehouse', prop: 'Adjuntowarehouse', tipocolumna: [], tipo: 'adjunto', width: '200px', fixed: false },
-                { id: 7, label: 'Adjuntar fotos y otros documentos', prop: 'Adjuntootros', mostraren: 'index', tipocolumna: [], tipo: 'boton', width: '200px', fixed: false }],
-            datocolumnadatosgeneralcarga: [{ dato: '', prop: 'Exportador', datoseleccion: [], regex: '^[0-9]{1,2}$', mensaje: 'Por favor seleccione una Moneda', valdidaregex: false, validardato: false },
-                { dato: '', prop: 'Importador', datoseleccion: [], regex: '^[0-9]{1,2}$', mensaje: 'Por favor seleccione una Moneda', valdidaregex: false, validardato: false },
-                { dato: new Date(), prop: 'fechaentregalistproveedor', regex: ' ^.* $', mensaje: 'Por favor seleccione un VigenciaTarifa', valdidaregex: false, validardato: false },
+                { id: 6, label: 'No. WareHouse', prop: 'Nowarehouse', tipocolumna: [], tipo: 'input', fixed: false, width: '200px', tipotex: 'textarea' },         
+                { id: 7, label: 'Adjuntar warehouse', prop: 'Adjuntowarehouse', tipocolumna: [], tipo: 'adjunto', width: '200px', fixed: false },
+                { id: 8, label: 'Adjuntar fotos y otros documentos', prop: 'Adjuntootros', mostraren: 'index', tipocolumna: [], tipo: 'boton', width: '200px', fixed: false }],
+            datocolumnadatosgeneralcarga: [{ dato: '', prop: 'Exportador', datoseleccion: [], regex: '^[0-9]{1,2}$', mensaje: 'Por favor seleccione una Moneda', valdidaregex: false, validardato: true },
+                { dato: '', prop: 'Importador', datoseleccion: [], regex: '^[0-9]{1,2}$', mensaje: 'Por favor seleccione una Moneda', valdidaregex: false, validardato: true },
+                { dato: new Date(), prop: 'fechaentregalistproveedor', regex: ' ^.* $', mensaje: 'Por favor seleccione un VigenciaTarifa', valdidaregex: false, validardato: true },
                 { dato: [], prop: 'detallesgenerales', regex: '^.+$', mensaje: 'Por favor seleccione un Adjunto', valdidaregex: false, validardato: false },
                 { dato: [], prop: 'tipomercancia', regex: '^.+$', mensaje: 'Por favor seleccione un Adjunto', valdidaregex: false, validardato: false },            
-                { dato: '', prop: 'Descripcionmercancia', regex: '^.+$', mensaje: 'Por favor seleccione un Observacion', valdidaregex: false, validardato: false },
-                { dato: [], prop: 'Adjuntowarehouse', regex: '^.+$', mensaje: 'Por favor seleccione un Adjunto', valdidaregex: false, validardato: false },
+                { dato: '', prop: 'Descripcionmercancia', regex: '^.+$', mensaje: 'Por favor seleccione un Observacion', valdidaregex: true, validardato: true },
+                { dato: '', prop: 'Nowarehouse', regex: '^.+$', mensaje: 'Por favor seleccione un Observacion', valdidaregex: true, validardato: true },
+                { dato: [], prop: 'Adjuntowarehouse', regex: '^.+$', mensaje: 'Por favor seleccione un Adjunto', valdidaregex: false, validardato: true },
                 { dato: [], prop: 'Adjuntootros', regex: '^.+$', mensaje: 'Por favor seleccione un Adjunto', valdidaregex: false, validardato: false }],
-            datodatosgeneralcarga: [{ Exportador: '', Importador: '', fechaentregalistproveedor: new Date(), detallesgenerales: [], tipomercancia: [], Descripcionmercancia: '  ', Adjuntowarehouse: [], Adjuntootros: [], editable: true }],
+            datodatosgeneralcarga: [{ Exportador: '', Importador: '', fechaentregalistproveedor: new Date(), detallesgenerales: [], tipomercancia: [], Descripcionmercancia: '  ', Nowarehouse:'', Adjuntowarehouse: [], Adjuntootros: [], editable: true }],
 
             columnatablaadjuntodomuento: [],
             columnatablaadjuntodomuentoinicial: [{ id: 0, label: 'Tipo de Documento', prop: 'TipoDocumentoArchivo', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], tipo: 'seleccion', deshabilitar: false, tiposeleccion: 'TipoDocumentoArchivo', datoseleccion: [], metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', width: '200px', fixed: false, filtro: true, cargarlista: [] },
@@ -148,20 +151,19 @@ new Vue({
             datosdetallesrazonsocial: [],
             dialogFormcorreo: false,
             columnatablacorreo: [],
-            columnatablacorreoinicial: [{ id: 0, label: 'Numero Warehouse', prop: 'NoWarehouse', tipocolumna: [], tipo: 'input', fixed: false  },
-                { id: 1, label: 'documentowarehouse', prop: 'documentowarehouse', tipocolumna: [], tipo: 'tooltip', columnatitulo: 'kg' },
-                //{ id: 2, label: 'Razon Social', prop: 'exportadoreimportador', tipocolumna: [], tipo: 'seleccion', deshabilitar: false, tiposeleccion: 'exportadoreimportador', datoseleccion: [], metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', width: '200px', fixed: false, filtro: true, cargarlista: [] },
-                { id: 2, label: 'Razon Social', prop: 'Razonsocial', tipo: 'seleccion', arreglotablas: [{ id: 0, tipoopcion: 'cambio', queafecta: 'Contactos', propafectar:'infarray', informacioncompleta:[]}], infarray: [], tipocargardato:2, fixed: false, tipocolumna: []},
-                { id: 3, label: 'Contactos', prop: 'Contactos', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], tipo: 'seleccionmultiple', arreglotablas: [{ id: 0, tipoopcion: 'cambio', queafecta: 'Correo', propafectar: 'dato', informacioncompleta: [] }], infarray: [], tipocargardato: 2, fixed: false},
-                { id: 4, label: 'Correo', prop: 'Correo', tipocolumna: [], tipo: 'labelimpresion', infarray: [], tipocargardato: 2, fixed: false },
-                { id: 5, label: 'Observaciones', prop: 'Observaciones', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], tipo: 'input', fixed: false }],
-            datocolumnacorreo: [{ dato: '', prop: 'NoWarehouse', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
-                { dato: [], prop: 'documentowarehouse', regex: '^.+$', mensaje: 'Por favor seleccione un Adjunto', valdidaregex: false, validardato: false },
-                { dato: null, prop: 'razonsocial', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
+            columnatablacorreoinicial: [{ id: 0, label: 'Razon Social', prop: 'Razonsocial', tipo: 'seleccion', arreglotablas: [{ id: 0, tipoopcion: 'cambio', queafecta: 'Contactos', propafectar:'infarray', informacioncompleta:[]}], infarray: [], tipocargardato:2, fixed: false, tipocolumna: []},
+                { id: 1, label: 'Contactos', prop: 'Contactos', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], tipo: 'seleccionmultiple', arreglotablas: [{ id: 0, tipoopcion: 'cambio', queafecta: 'Correo', propafectar: 'dato', informacioncompleta: [] }], infarray: [], tipocargardato: 2, fixed: false},
+                { id: 2, label: 'Correo', prop: 'Correo', tipocolumna: [], tipo: 'labelimpresion', infarray: [], tipocargardato: 2, fixed: false },
+                { id: 3, label: 'Observaciones', prop: 'Observaciones', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], tipo: 'input', fixed: false },
+                { id: 4, label: 'No Warehouse', prop: 'NoWarehouse', tipocolumna: [], tipo: 'seleccionmultiple', arreglotablas: [], infarray: [], tipocargardato: 2, fixed: false  },
+                { id: 5, label: 'Documento', prop: 'Documento', tipocolumna: [], tipo: 'adjunto', width: '100px', fixed: false }],
+            datocolumnacorreo: [{ dato: null, prop: 'Razonsocial', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
                 { dato: [], prop: 'Contactos', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
                 { dato: [], prop: 'Correo', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
-                { dato: '', prop: 'Observaciones', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false }],
-            datotablacorreo: [{ NoWarehouse: '', documentowarehouse: [], razonsocial: null, Contactos: [], Correo: [], Observaciones: '', editable: true }],
+                { dato: '', prop: 'Observaciones', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
+                { dato: [], prop: 'NoWarehouse', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },
+                { dato: [], prop: 'Documento', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false }],
+            datotablacorreo: [{ Razonsocial: null, Contactos: [], Correo: [], Observaciones: '', NoWarehouse: [], Documento:[], editable: true }],
 
             informacionformularioadjuntar: [],
             deshabilitaraceptartipomercancia: true,
@@ -176,23 +178,62 @@ new Vue({
             dialogFormobservaciones: false,
 
             crearcontacto: [{ id: 0, label: 'Nombre', prop: 'Nombre', tipo: 'input', visualizar: true },
-                { id: 1, label: 'Telefono', prop: 'Telefono', tipo: 'input', visualizar: true },
-                { id: 2, label: 'Correo', prop: 'Correo', tipo: 'input', visualizar: true }],
+                { id: 1, label: 'Pais', prop: 'pais', tipo: 'autocomplete', metodo: '../api/Login/CargarDatos', tipoautocomplete: 'Pais', visualizar: true },
+                { id: 2, label: 'Telefono', prop: 'Telefono', tipo: 'number', visualizar: true },
+                { id: 3, label: 'ext', prop: 'ext', tipo: 'number', visualizar: true },
+                { id: 4, label: 'Correo', prop: 'Correo', tipo: 'input', visualizar: true }],
             ruleformcontacto: {
                 Nombre: '',
-                Telefono: '',
+                pais: '',
+                Telefono: undefined,
+                ext: undefined,
                 Correo: ''
             },
             reglascontacto: { Nombre: [{ required: true, message: 'Ingresar razon social', trigger: ['blur', 'change'] },
                 { min: 0, max: 200, message: 'El nombre debe ser menor a 200 caracteres', trigger: ['blur', 'change'] }],
-                Telefono: [{ required: true, message: 'Ingresar razon social', trigger: ['blur', 'change'] },
+                pais: [{ required: true, message: 'Ingresar razon social', trigger: ['blur', 'change'] },
                 { min: 0, max: 200, message: 'El nombre debe ser menor a 200 caracteres', trigger: ['blur', 'change'] }],
+                Telefono: [{ required: true, message: 'Ingresar Documento'},
+                { type: 'number', message: 'El nombre debe ser menor a 200 caracteres'}],
+                ext: [{ required: false, message: 'Ingresar Documento' },
+                { type: 'number', message: 'El nombre debe ser menor a 200 caracteres' }],
                 Correo: [{ required: true, message: 'Ingresar razon social', trigger: ['blur', 'change'] },
-                { min: 0, max: 200, message: 'El nombre debe ser menor a 200 caracteres', trigger: ['blur', 'change'] }]
+                { type: 'email', message: 'El nombre debe ser menor a 200 caracteres', trigger: ['blur', 'change'] }]
             },
-            datocolumnaobservacion:[],
+            datocolumnaobservacion: [],
+            datocolumnanotificaciones: [],
             columnatablaobservacion: [{ id: 0, label: 'Observacion', prop: 'Observacion' }],
-            nombrecontacto:'',
+            nombrecontactorazonsocial: '',
+            observaciontablacorreo:'',
+            columnawarehouse: [{ id: 0, label: 'No Warehouse', prop: 'NoWarehouse', tipocolumna: [], tipo: 'label', width: '200px', fixed: false   },
+                { id: 1, label: 'Documento', prop: 'Documento', tipocolumna: [], tipo: 'label', width: '200px', fixed: false },
+                { id: 2, label: 'Status', prop: 'Status', tipocolumna: [], tipo: 'input', width: '200px', fixed: false }],
+            datoswarehouse: [],
+            DOseleccionado: '',
+            nowarehousetabla: [],
+            botonescolum: true,
+            status:'',
+            dialogFormstatus: false,
+            columnatablanotiinterna: [],
+            columnatablanotiinternainicial: [{ id: 0, label: 'Contactos', prop: 'Contactosinternos', tipocolumna: [], tipo: 'seleccion', deshabilitar: false, tiposeleccion: 'Contactosinternos', datoseleccion: [], metodo: '../api/Login/CargarDatos', placeholder: 'Seleccione opción', width: '200px', fixed: false, filtro: true, cargarlista: [] },
+            { id: 1, label: 'Observaciones', prop: 'Observaciones', tipocolumna: [{ id: 0, tipoopccion: 'boton', descripcion: 'Para habilitar el ingreso ingresar carga peligrosa en características mercancía', icono: 'el-icon-info', posicion: 'top' }], tipo: 'input', fixed: false }],
+            datocolumnanotiinterna: [{ dato: [], prop: 'Contactosinternos', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false },            
+            { dato: '', prop: 'Observaciones', regex: '^.+$', mensaje: 'Por favor agregar una Descripcion', valdidaregex: true, validardato: false }],
+            datotablanotiinterna: [{ Contactosinternos: [], Observaciones: '', editable: true }],       
+            dialogFormnotificaciones: false,
+            validartipomercancia: 0,
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -217,7 +258,7 @@ new Vue({
                 { id: 2, label: 'Modo de Transporte', prop: 'ModoTransporte', tiposeleccion: 'ModoTransporte', boton: false, popover: '', cargardato: true, metodo: '../api/Login/CargarDatos', cargarlista: [], width: '150px' },
                 { id: 3, label: 'Tipo de Carga', prop: 'tipocarga', tiposeleccion: 'TipoCarga', boton: false, popover: '', cargardato: true, metodo: '../api/Login/CargarDatos', cargarlista: [], width: '120px' },
                 { id: 4, label: 'Origen', prop: 'Origen', boton: false, popover: '', cargardato: false, fixed: true, cargarlista: [], width: '170px' },
-                { id: 5, label: 'Destino', prop: 'Destino', boton: false, popover: '', cargardato: false, cargarlista: [], width: '170px' },
+                { id: 5, label: 'Destino', prop: 'Destaceptarcargageneralino', boton: false, popover: '', cargardato: false, cargarlista: [], width: '170px' },
                 { id: 6, label: 'Warehouse Creados', prop: 'Warehouse', boton: true, popover: 'boton', cargardato: false, cargarlista: [], width: '180px' }],
             componentKey: 0,
             active: 1,
@@ -327,27 +368,27 @@ new Vue({
 
 
             exportador: [{ id: 0, label: 'Tipo de Documento', prop: 'idtipodocumento', tipo: 'seleccion', placeholder: 'seleccione tipo de documento', metodo: '../api/Login/CargarDatos', tiposeleccion: 'TipoDocumento', datoseleccion: [], visualizar: true },
-                { id: 1, label: 'Numero de documento', prop: 'numerodedocumento', tipo: 'number', visualizar: true },
+                { id: 1, label: 'Numero de documento', prop: 'numerodocumento', tipo: 'number', visualizar: true },
                 { id: 2, label: 'Razon social', prop: 'razonsocial', tipo: 'input', visualizar: true },
                 { id: 3, label: 'Pais', prop: 'pais', tipo: 'autocomplete', metodo: '../api/Login/CargarDatos', tipoautocomplete: 'Pais', visualizar: true }],
 
             //datosexportador: [{ dato: null, prop: 'idtipodocumento' }, { dato: undefined, prop: 'numerodedocumento' }, { dato: '', prop: 'razonsocial' }, { dato: '', prop: 'pais' }],
             ruleformexportador: {
                 idtipodocumento: null,
-                numerodedocumento: undefined,
+                numerodocumento: undefined,
                 razonsocial: '',
                 pais: ''
             },
 
 
-            importador: [{ id: 0, label: 'Tipo de Documento', prop: 'TipoDocumento', tipo: 'seleccion', placeholder: 'seleccione tipo de documento', metodo: '../api/Login/CargarDatos', tiposeleccion: 'TipoDocumento', datoseleccion: [], visualizar: true },
-                { id: 1, label: 'Numero de documento', prop: 'numerodedocumento', tipo: 'number', visualizar: true },
+            importador: [{ id: 0, label: 'Tipo de Documento', prop: 'idtipodocumento', tipo: 'seleccion', placeholder: 'seleccione tipo de documento', metodo: '../api/Login/CargarDatos', tiposeleccion: 'TipoDocumento', datoseleccion: [], visualizar: true },
+                { id: 1, label: 'Numero de documento', prop: 'numerodocumento', tipo: 'number', visualizar: true },
                 { id: 2, label: 'Razon social', prop: 'razonsocial', tipo: 'input', visualizar: true },
                 { id: 3, label: 'Pais', prop: 'pais', tipo: 'autocomplete', metodo: '../api/Login/CargarDatos', tipoautocomplete: 'Pais', visualizar: true }],
             //datosimportador: [{ dato: null, prop: 'idtipodocumento' }, { dato: undefined, prop: 'numerodedocumento' }, { dato: '', prop: 'razonsocial' }, { dato: '', prop: 'pais' }],
             ruleformimportador: {
                 idtipodocumento: null,
-                numerodedocumento: undefined,
+                numerodocumento: undefined,
                 razonsocial: '',
                 pais: ''
             },
@@ -370,14 +411,14 @@ new Vue({
             //datoseditarexportador: [{ dato: null, prop: 'idtipodocumento' }, { dato: undefined, prop: 'numerodocumento' }, { dato: '', prop: 'razonsocial' }, { dato: '', prop: 'pais' }],
             ruleformeditarexportador: {
                 idtipodocumento: null,
-                numerodedocumento: undefined,
+                numerodocumento: undefined,
                 razonsocial: '',
                 pais: ''
             },
             //datoseditarimportador: [{ dato: null, prop: 'idtipodocumento' }, { dato: undefined, prop: 'numerodocumento' }, { dato: '', prop: 'razonsocial' }, { dato: '', prop: 'pais' }],
             ruleformeditarimportador: {
                 idtipodocumento: null,
-                numerodedocumento: undefined,
+                numerodocumento: undefined,
                 razonsocial: '',
                 pais: ''
             },
@@ -429,6 +470,7 @@ new Vue({
             datosconsultawarehouse: [],
             dialogFormConsultawarehouse: false,
             dialogFormDetalleswarehouse: false,
+
 
             columnatabladetalleswarehouse: [{ id: 0, label: 'Descripcion', prop: 'Descripcion' },
                 { id: 1, label: 'Tipo Embalaje', prop: 'TipoEmbalaje', cargardato: true, cargarlista: [], metodo: '../api/Login/CargarDatos', tiposeleccion: 'TipoEmbalaje' },
@@ -538,38 +580,70 @@ new Vue({
             return this.searchimportador.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
         },
         displayDatacrearcliente() {
+            console.log('displayDatacrearCliente ', this.crearclientedatos);
             if (!this.crearclientedatos || this.crearclientedatos.length === 0) return [];
             this.searchcrearcliente = this.crearclientedatos.filter(data => !this.search || data.razonsocial.toLowerCase().includes(this.search.toLowerCase()) || data.pais.toLowerCase().includes(this.search.toLowerCase()) || data.numerodocumento.toLowerCase().includes(this.search.toLowerCase()));
             return this.searchcrearcliente.slice(this.pageSize * this.page - this.pageSize, this.pageSize * this.page)
         }
     },
     methods: {
+        aceptarnotificacion() {
+            console.log("datocolumnanotiinterna", this.datocolumnanotiinterna);
+            const found5 = this.datocolumnanotiinterna.findIndex(element => element.prop == 'Observaciones');
+            Reflect.set(this.datocolumnanotiinterna[found5], 'dato', this.observaciontablacorreo);
+            this.dialogFormnotificaciones = false;
+        },
+        aceptarenviarcorreo() {
+            this.dialogFormcorreo = false;
+            this.$confirm('Desea cambiar o modificar el mensaje de notificacion guardado por el sistema', {
+                confirmButtonText: 'OK',
+                cancelButtonText: 'Cancel',
+                type: 'warning'
+            }).then(() => {
+                this.dialogFormmensaje = true;
+                this.notificacionauto = this.datoscrearclienteseleccionado['notificacion'];
+            }).catch(() => {
+
+            })
+        },
+        changecurrentobservacion(valor) {
+            console.log("cambio observacion", valor);
+            this.observaciontablacorreo = valor.Observacion;
+        },        
+        aceptarseleccobserva() {
+            const found = this.datocolumnadatocolumnanotiinternacorreo.findIndex(element => element.prop == 'Observaciones');
+            Reflect.set(this.datocolumnacorreo[found], 'dato', this.observaciontablacorreo);
+            this.dialogFormobservaciones = false;
+        },
         validodatoscorreo(valido) {
+            let currentObj = this;            
             if (valido == true) {
                 console.log("validocorreo");
-                this.dialogFormcontactos = false;
-                let currentObj = this;
+                this.dialogFormcontactos = false;               
                 console.log("nombrecontacto", this.nombrecontacto);
+                this.listaclientes = [];
                 this.axios.post(this.metodoguardarcliente, {
-                    razonsocial: this.nombrecontacto,
+                    razonsocial: this.nombrecontactorazonsocial,
                     contactos: [{ contacto: { nombre: currentObj.ruleformcontacto.Nombre, telefono: currentObj.ruleformcontacto.Telefono, correo: currentObj.ruleformcontacto.Correo } }],
                 })
                     .then(function (response) {
                         currentObj.output = JSON.parse(response.data);
+                        currentObj.listaclientes = currentObj.output["Contactos"];
+                        console.log("datos  mirar contactos:", currentObj.listaclientes);
 
 
+                        const foundcontactosinter = currentObj.columnatablacorreo.findIndex(element => element.prop == 'Contactos');
+                        const found2 = currentObj.columnatablacorreo[foundcontactosinter].arreglotablas.findIndex(element => element.queafecta == 'Correo');
+                        Reflect.set(currentObj.columnatablacorreo[foundcontactosinter].arreglotablas[found2], 'informacioncompleta', currentObj.listaclientes);
                     })
                     .catch(function (error) {
                         currentObj.output = error;
                     });
 
-                console.log("listacontactos", this.listaclientes, this.listacontactos);  
+
                 const foundcontactos = this.columnatablacorreo.findIndex(element => element.prop == 'Contactos');
-                console.log("lista nombres", this.columnatablacorreo[foundcontactos].infarray);
                 this.columnatablacorreo[foundcontactos].infarray.push(this.ruleformcontacto.Nombre);
-                const foundcorreo = this.datocolumnacorreo.findIndex(element => element.prop == 'Correo');
-                console.log("lista correos", this.datocolumnacorreo[foundcorreo].dato);
-                this.datocolumnacorreo[foundcorreo].dato.push(this.ruleformcontacto.Correo);
+                
             }
         },
         aceptarformcorreo() {
@@ -584,7 +658,7 @@ new Vue({
             }
             else if (prop == 'Observaciones') {
                 this.axios.post(this.metodocargarobservacion, {
-
+                    IdCliente:this.IdCliente,
 
                 })
                     .then(function (response) {
@@ -679,57 +753,91 @@ new Vue({
                 this.deshabilitaraceptartipomercancia = true;
             }
         },
-        //nombrecontacto(nombre) {
-           
-        //},
+        nombrecontacto(nombre) {
+            this.nombrecontactorazonsocial = nombre;
+        },
+        carguecorreo() {
+            //
+            let currentObj = this;
+            this.datodatosgeneralcarga.forEach(function callback(element) {
+                if (element.Nowarehouse != '') {
+                    if (!currentObj.nowarehousetabla.includes(element.Nowarehouse)) {
+                        currentObj.nowarehousetabla.push(element.Nowarehouse);
+                    }
+                    const foundnoware = currentObj.columnatablacorreo.findIndex(element => element.prop == 'NoWarehouse');
+                    Reflect.set(currentObj.columnatablacorreo[foundnoware], 'infarray', currentObj.nowarehousetabla);
+                    //console.log("validacion de dato repetido", currentObj.datoswarehouse.some(item => item.NoWarehouse === element.Nowarehouse))
+                    if (!currentObj.datoswarehouse.some(item => item.NoWarehouse === element.Nowarehouse)) {
+                        currentObj.datoswarehouse.push({ NoWarehouse: element.Nowarehouse, Documento: "Sin documento", Status: currentObj.status, editable: true });
+                    }
+                    
+                }
+            });
+        },
+        columnanotificacion() {
+            let currentObj = this;
+            this.axios.post(this.metodocarganotificaciones, {
+                IdCliente: this.IdCliente,
+            })
+                .then(function (response) {
+                    currentObj.output = JSON.parse(response.data);
+                    currentObj.datocolumnanotificaciones = currentObj.output["Observaciones"];
+                })
+                .catch(function (error) {
+                    currentObj.output = error;
+                });
+            this.dialogFormnotificaciones = true;
+        },
         aceptarcargageneral() {
             let currentObj = this;
+            this.axios.post(this.metodocargarobservacion, {               
+            })
+                .then(function (response) {
+                    currentObj.output = JSON.parse(response.data);
+
+                    currentObj.status = currentObj.output["Observaciones"][0].Observacion;
+                    console.log("datos status", currentObj.status);
+
+                })
+                .catch(function (error) {
+                    currentObj.output = error;
+                });
+            
+
+            this.ruleForm.Nowarehouse = "WR-" + this.DOseleccionado;           
+           
             const foundrazon = this.columnatablacorreo.findIndex(element => element.prop == 'Razonsocial');
             Reflect.set(this.columnatablacorreo[foundrazon], 'infarray', this.arrayderazonessociales);
             //var razonsocialcolumnatablacorreo = this.columnatablacorreo[foundrazon];
             const found = this.columnatablacorreo[foundrazon].arreglotablas.findIndex(element => element.queafecta == 'Contactos');
             Reflect.set(this.columnatablacorreo[foundrazon].arreglotablas[found], 'informacioncompleta', this.listaclientes);
 
-
-
-           
-
             const foundcontactos = this.columnatablacorreo.findIndex(element => element.prop == 'Contactos');
             const found2 = this.columnatablacorreo[foundcontactos].arreglotablas.findIndex(element => element.queafecta == 'Correo');
             Reflect.set(this.columnatablacorreo[foundcontactos].arreglotablas[found2], 'informacioncompleta', this.listaclientes);
-            //this.listaclientes.forEach(function callback(element) {
-            //    console.log("element: ", element.razonsocial);
-            //    currentObj.arrayderazonessociales.forEach(function callback(elemento) {
-            //        if (elemento === element.razonsocial) {
-            //            element.contactos.forEach(function callback(elemen) {
-            //                console.log("contactos", elemen.contacto.nombre);                            
-            //                currentObj.listacontactos.push(elemen.contacto.nombre);
-            //                //const found2 = currentObj.columnatablacorreo.findIndex(element => element.prop == 'Contactos');
-            //                //console.log("contactos", currentObj.listaclientes);
-            //                //Reflect.set(currentObj.columnatablacorreo[found2], 'infarray', currentObj.listaclientes);
-            //            });                        
-            //        } 
-            //    });
-            //});
+                        
             this.$confirm('Desea enviar correo electrónico', {
                 confirmButtonText: 'OK',
                 cancelButtonText: 'Cancel',
                 type: 'warning'
             }).then(() => {
+                this.carguecorreo();
                 this.dialogFormcorreo = true;
                
             }).catch(() => {
-                this.$confirm('Desea cambiar o modificar el mensaje de notificacion guardado por el sistema', {
-                    confirmButtonText: 'OK',
-                    cancelButtonText: 'Cancel',
-                    type: 'warning'
-                }).then(() => {
-                    this.dialogFormmensaje = true;
-                    this.notificacionauto = this.datoscrearclienteseleccionado['notificacion'];
-                    console.log("datos notificacion", this.datoscrearclienteseleccionado['notificacion'], this.notificacionauto);
-                }).catch(() => {
+                this.dialogFormstatus = true;
+                this.carguecorreo();
+                //this.$confirm('Desea cambiar o modificar el mensaje de notificacion guardado por el sistema', {
+                //    confirmButtonText: 'OK',
+                //    cancelButtonText: 'Cancel',
+                //    type: 'warning'
+                //}).then(() => {
+                //    this.dialogFormmensaje = true;
+                //    this.notificacionauto = this.datoscrearclienteseleccionado['notificacion'];
+                //    console.log("datos notificacion", this.datoscrearclienteseleccionado['notificacion'], this.notificacionauto);
+                //}).catch(() => {
 
-                });
+                //});
             });
             
 
@@ -743,13 +851,25 @@ new Vue({
         handleChangeadjunto(file, fileList) {
             this.fileList = fileList.slice(-3);
         },
-        accionbotonescolumna(prop) {
-            console.log("accionbotondes columnas", prop);
+        accionbotonescolumna(prop,icono,id) {
+            console.log("accionbotondes columnas", prop, icono, id);
             if (prop == 'Exportador') {
-                this.dialogFormexportador = true;
+                if (id == 0) {
+                    this.dialogFormexportador = true;
+                }
+                else if (id == 1) {
+                    this.dialogFormExportadorbuscar = true;
+                    this.buscarexportador();
+                }
             }
-            else if (prop =='Importador') {
-                this.dialogFormimportador = true;
+            else if (prop == 'Importador') {
+                if (id == 0) {
+                    this.dialogFormimportador = true;
+                }
+                else if (id == 1) {
+                    this.dialogFormImportadorbuscar = true;
+                    this.buscarimportador();;
+                }
             }
         },
         accionbotonvista(datos, prop, scope) {
@@ -912,12 +1032,14 @@ new Vue({
             
         },
         buscarcliente() {
+            console.log("buscar cliente");
             this.dialogFormcrearclientebuscar = true;
             this.crearclientedatos = [];
             this.search = '';            
             let currentObj = this;
             this.datostablacrearcliente.forEach(function callback(element) {
-                currentObj.crearclientedatos.push({ idtipodocumento: element.idtipodocumento, numerodocumento: element.numerodocumento+'', razonsocial: element.razonsocial, pais: element.pais.Nombre, idcliente: element.idcliente });
+                currentObj.crearclientedatos.push({ idtipodocumento: element.idtipodocumento, numerodocumento: element.numerodocumento + '', razonsocial: element.razonsocial, pais: element.pais.Nombre, idcliente: element.idcliente });
+                console.log("crearcliente datos buscar", currentObj.crearclientedatos);
             });
         },
         cancelarcrearcliente() {
@@ -977,8 +1099,9 @@ new Vue({
             //Reflect.set(this.datoseditarcliente[fondpais], 'dato', this.datoscrearclienteseleccionado['pais']);
             this.ruleformeditarcliente.pais = this.datoscrearclienteseleccionado['pais'];
         },
-        cargarCliente(valor) {            
-            this.datostablacrearcliente = Array.from(valor, x => x.objeto);            
+        cargarCliente(valor) {         
+            this.datostablacrearcliente = Array.from(valor, x => x.objeto); 
+            console.log("cargarCliente", valor,"datostablacrearcliente", this.datostablacrearcliente);
         },
         validareditarcliente(valido) {
             if (valido = true) {
@@ -1003,13 +1126,13 @@ new Vue({
         },
         cancelarseleccionexportador() {
             this.visualizareditar = false;
-            this.dialogFormExportadorbuscar = false;
-            
+            this.dialogFormExportadorbuscar = false;            
         },
         confirmarseleccionexportador() {
             this.visualizareditar = false;
             this.dialogFormExportadorbuscar = false;
-            this.ruleForm.exportador = this.datosexportadorseleccionado['razonsocial'];
+            const foundexport = this.columnadatosgeneralcargainicial.findIndex(element => element.prop == 'Exportador');
+            Reflect.set(this.datocolumnadatosgeneralcarga[foundexport], 'dato', this.datosexportadorseleccionado['razonsocial']);
         },
         cancelarseleccionimportador() {
             this.visualizareditar = false;
@@ -1019,9 +1142,11 @@ new Vue({
         confirmarseleccionimportador() {
             this.visualizareditar = false;
             this.dialogFormImportadorbuscar = false;
-            this.ruleForm.importador = this.datosimportadorseleccionado['razonsocial'];
+            const foundimport = this.columnadatosgeneralcargainicial.findIndex(element => element.prop == 'Importador');
+            Reflect.set(this.datocolumnadatosgeneralcarga[foundimport], 'dato', this.datosimportadorseleccionado['razonsocial']);
         },
         buscarexportador() {
+            console.log("buscar exportador");
             this.exportadordatos = [];
             this.search = '';
             this.dialogFormExportadorbuscar = true;
@@ -1099,15 +1224,19 @@ new Vue({
             this.datosimportadorseleccionado = value;
             this.visualizareditar = true;
         },
-        cargarImportador(valor) {
-            this.datostablaimportador = Array.from(valor, x => x.objeto);
-
+        cargarlistaautocomplete(valor, prop) {
+            console.log("cargar lista autoicopmplete index", valor, prop);
+            if (prop == 'Importador') {
+                this.datostablaimportador = Array.from(valor, x => x.objeto);
+                console.log("datostablaimportador", this.datostablaimportador);
+            }
+            else if (prop == 'Exportador') {
+                this.datostablaexportador = Array.from(valor, x => x.objeto);  
+                console.log("datostablaexportador", this.datostablaexportador);
+            }
         },
-        cargarExportador(valor) {
-            this.datostablaexportador = Array.from(valor, x => x.objeto);           
-
-        },
-        recibirsearch(val) {
+        
+        recibirsearch(val) {            
             this.search = val;
         },
         adicionarimportador() {
@@ -1187,10 +1316,11 @@ new Vue({
             this.modotransporteseleccionado = this.ruleformcreardo.ModoTransporte;
             //const foundnuevovalorfactor = this.datoscreardo.findIndex(element => element.prop == 'ValorFactor');
             this.ruleForm.factorestiba = this.ruleformcreardo.ValorFactor;
+            this.DOseleccionado = this.ruleformcreardo.DO;
             this.carguedeinformacion();
             if (this.datosseleccioncopiawarehouse.length == 0) {
                 this.dialogFormcreardo = false;
-                this.visualizacionstep = true;
+                this.tabladatos = true;
                 this.ocultarprincipal = false;
             }
             else {
@@ -1325,6 +1455,9 @@ new Vue({
 
         },
         changecurrentwarehouse(valor) {
+            console.log("camibo warehouse selleccionado:", valor);
+            this.DOseleccionado = valor.DO;
+            
             this.modotransporteseleccionado = valor.ModoTransporte;
             this.ruleForm.factorestiba = valor.valorfactor; 
             this.visualizarwarehouse = true;
@@ -2088,8 +2221,16 @@ new Vue({
         formulariocancelartipomercancia() {
             this.dialogFormtipomercancia = false;
         },
-        formularioaceptartipomercancia() {
-            this.dialogFormtipomercancia = false;            
+        validacionespaso(validacion, fila,val) {
+            console.log("validacionespaso", validacion, fila, val);
+            //if (val) {
+            //    this.dialogFormtipomercancia = false;   
+            //}
+        },
+        formularioaceptartipomercancia(val) {
+            console.log("aceptar tipo mercancia", val);
+            
+            this.validartipomercancia = this.validartipomercancia + 1;         
             const found = this.datocolumnadatosgeneralcarga.findIndex(element => element.prop == 'tipomercancia');
             Reflect.set(this.datocolumnadatosgeneralcarga[found], 'dato', this.datotablatipomercancia);
         },
@@ -2185,7 +2326,7 @@ new Vue({
             this.datotablatipomercancia = JSON.parse(JSON.stringify(this.datotablatipomercanciainicial));
             this.datotablaadjuntodomuento = JSON.parse(JSON.stringify(this.datotablaadjuntodomuentoinicial));
             this.columnatablacorreo = JSON.parse(JSON.stringify(this.columnatablacorreoinicial));
-
+            this.columnatablanotiinterna = JSON.parse(JSON.stringify(this.columnatablanotiinternainicial));
 
 
 
@@ -2255,6 +2396,49 @@ new Vue({
                 this.dialogFormimportador = false;
                 //this.visualizareditar = false;
             }
+        },
+        validodatosexportadoreditar(valido) {
+            if (valido = true) {
+
+                const foundexport = this.columnadatosgeneralcargainicial.findIndex(element => element.prop == 'Exportador');
+                Reflect.set(this.datocolumnadatosgeneralcarga[foundexport], 'dato', this.ruleformeditarexportador.razonsocial);
+
+                let currentObj = this;
+                this.axios.post(this.metodoguardarcrearcliente, {
+                    Datocrearexportador: this.ruleForm.exportador,
+                })
+                    .then(function (response) {
+                    })
+                    .catch(function (error) {
+                        currentObj.output = error;
+                    });
+                this.dialogFormexportadoreditar = false;
+                this.visualizareditar = false;
+            }
+        },
+        aceptarexportadoreditar() {
+            this.validarformulario = this.validarformulario + 1;
+        },
+        validodatosimportadoreditar(valido) {
+            if (valido = true) {
+                const foundexport = this.columnadatosgeneralcargainicial.findIndex(element => element.prop == 'Importador');
+                Reflect.set(this.datocolumnadatosgeneralcarga[foundexport], 'dato', this.ruleformeditarimportador.razonsocial);
+                let currentObj = this;
+                this.axios.post(this.metodoguardarcrearcliente, {
+                    Datocrearimportador: this.ruleformeditarimportador,
+                })
+                    .then(function (response) {
+
+                    })
+                    .catch(function (error) {
+                        currentObj.output = error;
+                    });
+                this.dialogFormimportadoreditar = false;
+                this.visualizareditar = false;
+            }
+        },
+        aceptarimportadoreditar() {
+            this.validarformulario = this.validarformulario + 1;
         },
         aceptarimportador() {
             this.validarformulario = this.validarformulario + 1;
